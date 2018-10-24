@@ -147,12 +147,9 @@ export default {
       vm.$refs.form.reset();
     },
     updateAudio: function(target) {
-      nodecg.log.info(JSON.stringify(target));
-      nodecg.log.info('stream position updated');
       nodecg.sendMessage('switchAudio', target);
     },
     updatePosition: function(newPosition, streamer) {
-      nodecg.log.info('stream position updated');
       nodecg.sendMessage('updateStreamPosition', {
         position: newPosition,
         streamer: streamer

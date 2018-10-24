@@ -78,14 +78,11 @@ const switchAudioTo = function(target) {
 	const newAudio = !target.audio;
 	let tempLayoutRep = JSON.parse(JSON.stringify(layoutRep.value));
 	let tempStreamerRep = JSON.parse(JSON.stringify(streamerRep.value));
-	nodecg.log.info(JSON.stringify(streamerRep.value));
-	nodecg.log.info(newAudio);
 
 	// Cycle through the layout temp, setting the target's audio
 	// based on the `target.audio` bool. Mute everyone else.
 	for (let [key, value] of Object.entries(tempLayoutRep)) {
 		if (value.name === target.name) {
-			nodecg.log.info('unmute');
 			obs.send('SetMute', {
 				source: 'streamer-rtmp-'+key,
 				mute: !newAudio
@@ -93,7 +90,6 @@ const switchAudioTo = function(target) {
 			// Update the target's audio value in the temp variable
 			tempStreamerRep[value.name].audio = newAudio;
 		} else {
-			nodecg.log.info('mute');
 			obs.send('SetMute', {
 				source: 'streamer-rtmp-'+key,
 				mute: true
@@ -111,6 +107,5 @@ const switchAudioTo = function(target) {
 
 	// Send streamer temp values to its replicant
 	streamerRep.value = tempStreamerRep;
-	nodecg.log.info(JSON.stringify(streamerRep.value));
 	nodecg.sendMessage('audioUpdated', true);
 }
