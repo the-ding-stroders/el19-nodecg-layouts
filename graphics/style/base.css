@@ -1,0 +1,19 @@
+@font-face {
+  font-family: Cabin;
+  src: url(../fonts/Cabin-Regular.otf);
+}
+@font-face {
+  font-family: SourceSansPro;
+  src: url(../fonts/SourceSansPro-Regular.otf);
+}
+@font-face {
+  font-family: PTSans;
+  src: url(../fonts/PTC55F.ttf);
+}
+@font-face {
+  font-family: WhatARelief;
+  src: url(../fonts/whata-relief.normal.ttf);
+}
+/*Sidebar Classes*/
+.sidebar-div{display:block;position:absolute; top:0;right:0;font-family:'PTSans', sans-serif;height:1000px;width:250px;}
+.dark .sidebar-div{background:#555555; border-left:2px solid #777}
