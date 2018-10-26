@@ -48,69 +48,11 @@
           </v-layout>
         </v-form>
         <v-layout row wrap>
-          <v-flex xs4
+          <StreamersCard
             v-for="streamer in streamers"
             :key="streamer.name"
             :streamer="streamer"
-          >
-            <v-card>
-              <v-card-title>
-                <div class="headline">{{ streamer.name }}</div>
-              </v-card-title>
-              <v-card-text>
-                <div>{{ streamer.twitter }}</div>
-                <div>{{ streamer.discord }}</div>
-                <div class="text-truncate">{{ streamer.url }}</div>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn-toggle v-model="streamer.position">
-                  <v-btn
-                    large
-                    :ripple="false"
-                    class="px-2"
-                    @click="updatePosition('0', streamer)"
-                  >
-                    <v-icon>looks_one</v-icon>
-                  </v-btn>
-                  <v-btn
-                    large
-                    :ripple="false"
-                    class="px-2"
-                    @click="updatePosition('1', streamer)"
-                  >
-                    <v-icon>looks_two</v-icon>
-                  </v-btn>
-                  <v-btn
-                    large
-                    :ripple="false"
-                    class="px-2"
-                    @click="updatePosition('2', streamer)"
-                  >
-                    <v-icon>looks_3</v-icon>
-                  </v-btn>
-                  <v-btn
-                    large
-                    :ripple="false"
-                    class="px-2"
-                    @click="updatePosition('3', streamer)"
-                  >
-                    <v-icon>looks_4</v-icon>
-                  </v-btn>
-                </v-btn-toggle>
-                <v-btn
-                  class="mx-2"
-                  @click="updateAudio(streamer)"
-                  icon
-                >
-                  <v-icon
-                    :class="{'green--text': streamer.audio}"
-                  >
-                    volume_up
-                  </v-icon>
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-flex>
+          ></StreamersCard>
         </v-layout>
       </v-container>
     </v-app>
@@ -118,8 +60,13 @@
 </template>
 
 <script>
+import StreamersCard from './StreamersCard.vue'
+
 export default {
   name: 'app',
+  components: {
+    StreamersCard
+  },
   data: () => ({
     discord: null,
     formVisible: false,
@@ -145,15 +92,6 @@ export default {
     clearForm: function() {
       const vm = this;
       vm.$refs.form.reset();
-    },
-    updateAudio: function(target) {
-      nodecg.sendMessage('switchAudio', target);
-    },
-    updatePosition: function(newPosition, streamer) {
-      nodecg.sendMessage('updateStreamPosition', {
-        position: newPosition,
-        streamer: streamer
-      });
     },
     updateStreamers: function() {
       const vm = this;
