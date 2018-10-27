@@ -46,12 +46,13 @@ export default {
     hideLabel: function(tl) {
       const hideLabel = new TimelineLite();
 
-      hideLabel.to({}, 0.03, {});
-      hideLabel.to('.label', 0.5, {
-        opacity: 0,
+      tl.to({}, 0.03, {});
+      tl.to('.label', 0.3, {
+        autoAlpha: 0,
+        display: "none",
         ease: Linear.ease
       })
-      return hideLabel;
+      return tl;
     },
     populateMessages: function() {
       const vm = this;
@@ -126,7 +127,7 @@ export default {
       const tl = new TimelineLite();
       const messages = vm.ctaMessages;
 
-      vm.hideLabel();
+      vm.hideLabel(tl);
       messages.forEach(message => {
         vm.setContent(tl, message.content);
         vm.showContent(tl);
@@ -154,7 +155,8 @@ export default {
       showLabel.to({}, 0.03, {});
       showLabel.to('.label', 0.5, {
         backgroundColor: color,
-        opacity: 1,
+        autoAlpha: 1,
+        display: "inline-block",
         ease: Linear.ease
       });
       showLabel.to({}, scrollHoldDuration, {});
