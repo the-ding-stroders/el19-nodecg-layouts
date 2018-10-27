@@ -2,7 +2,12 @@
 const nodecg = require('./util/nodecg-api-context').get();
 const OBSUtility = require('nodecg-utility-obs');
 const obs = new OBSUtility(nodecg);
-const layoutRep = nodecg.Replicant('tds:streamlayout', { defaultValue: {} });
+const layoutRep = nodecg.Replicant('tds:streamlayout', { defaultValue: {
+	'0': {'name': '', 'url': ''},
+	'1': {'name': '', 'url': ''},
+	'2': {'name': '', 'url': ''},
+	'3': {'name': '', 'url': ''}
+}});
 const streamerRep = nodecg.Replicant('tds:streamers');
 
 obs.on('error', err => {
@@ -73,8 +78,11 @@ const updateLayout = function() {
 			});
 
 		// Update the streamer replicant so the dashboard knows who's where
-		tempStreamerRep[value.name].position = parseInt(key);
+		if (value.name) {
+			tempStreamerRep[value.name].position = parseInt(key);
+		}
 	}
+
 	streamerRep.value = tempStreamerRep;
 	nodecg.sendMessage('layoutUpdated', true);
 }
