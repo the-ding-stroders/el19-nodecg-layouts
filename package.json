@@ -45,6 +45,13 @@
         "workspace": "2 - Lower Third"
       },
       {
+        "name": "schedule",
+        "title": "Schedule",
+        "width": 7,
+        "file": "schedule.html",
+        "workspace": "2 - Lower Third"
+      },
+      {
         "name": "3 - streamers",
         "title": "Streamer Controls",
         "file": "streamers.html",

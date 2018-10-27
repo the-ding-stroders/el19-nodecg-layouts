@@ -1,50 +1,64 @@
 <template>
-  <div id="app" class="md-layout md-gutter">
-    <div class="md-layout-item">
-      <md-card>
-        <md-card-header>
-          <div class="md-title">Current</div>
-        </md-card-header>
+  <div id="app">
+    <v-app dark>
+      <v-container grid-list-md text-xs-center>
+        <v-layout row wrap>
+          <v-flex xs6>
+            <v-card>
+              <v-card-title>
+                <div class="md-title">Current</div>
+              </v-card-title>
 
-        <md-card-content>
-          <md-radio v-model="currentSchedType" value="game">Game</md-radio>
-          <md-radio v-model="currentSchedType" value="break">Break</md-radio>
-          <md-radio v-model="currentSchedType" value="other">Other</md-radio>
+              <v-card-text>
+                <v-radio-group v-model="currentSchedType" :mandatory="true">
+                  <v-radio label="Game" value="game"></v-radio>
+                  <v-radio label="Break" value="break">Break</v-radio>
+                  <v-radio label="Other" value="other">Other</v-radio>
+                </v-radio-group>
 
-          <small>Model value: {{ currentSchedType }}</small>
+                <small>Model value: {{ currentSchedType }}</small>
 
-          <md-autocomplete v-model="currentGame" :md-options="gameList">
-            <label>Game</label>
-          </md-autocomplete>
-        </md-card-content>
+                <v-autocomplete
+                  v-model="currentGame"
+                  :items="gameList"
+                  label="Game"
+                  item-text="fields.name"
+                  item-value="pk"
+                ></v-autocomplete>
+              </v-card-text>
 
-        <md-card-actions>
-          <md-button>Action</md-button>
-          <md-button>Action</md-button>
-        </md-card-actions>
-      </md-card>
-    </div>
+              <v-card-actions>
+                <v-btn>Action</v-btn>
+                <v-btn>Action</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
 
-    <div class="md-layout-item">
-      <md-card>
-        <md-card-header>
-          <div class="md-title">Next</div>
-        </md-card-header>
+          <v-flex xs6>
+            <v-card>
+              <v-card-title>
+                <div class="md-title">Next</div>
+              </v-card-title>
 
-        <md-card-content>
-          <md-radio v-model="nextSchedType" value="game">Game</md-radio>
-          <md-radio v-model="nextSchedType" value="break">Break</md-radio>
-          <md-radio v-model="nextSchedType" value="other">Other</md-radio>
+              <v-card-text>
+                <v-radio-group v-model="nextSchedType" :mandatory="true">
+                  <v-radio label="Game" value="game"></v-radio>
+                  <v-radio label="Break" value="break">Break</v-radio>
+                  <v-radio label="Other" value="other">Other</v-radio>
+                </v-radio-group>
 
-          <small>Model value: {{ nextSchedType }}</small>
-        </md-card-content>
+                <small>Model value: {{ nextSchedType }}</small>
+              </v-card-text>
 
-        <md-card-actions>
-          <md-button>Action</md-button>
-          <md-button>Action</md-button>
-        </md-card-actions>
-      </md-card>
-    </div>
+              <v-card-actions>
+                <v-btn>Action</v-btn>
+                <v-btn>Action</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-app>
   </div>
 </template>
 
@@ -69,17 +83,5 @@ export default {
 <style>
   small {
     display: block;
-  }
-  .md-card {
-    width: 320px;
-    margin: 4px;
-    display: inline-block;
-    vertical-align: top;
-  }
-  .md-layout-item:after {
-    width: 100%;
-    height: 100%;
-    display: block;
-    content: " ";
   }
 </style>
