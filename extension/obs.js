@@ -18,7 +18,7 @@ obs.on('ConnectionOpened', () => {
 
 		let tempLayoutRep = JSON.parse(JSON.stringify(layoutRep.value));
 
-		// Loop through the streamer sources...
+		// Loop through the layout sources...
 		for (let [key, value] of Object.entries(layoutRep.value)) {
 			// If this source is using the URL we're updating, move what's in the
 			// desired slot to where we're at now, then put the updated URL there
@@ -44,6 +44,11 @@ obs.on('ConnectionOpened', () => {
 
 const updateLayout = function() {
 	let tempStreamerRep = JSON.parse(JSON.stringify(streamerRep.value));
+	// Reset all streamers' position to `null`, because there's only
+	// one more week until game day.
+	for (let [key, streamer] of Object.entries(tempStreamerRep)) {
+		streamer.position = null;
+	}
 
 	for (let [key, value] of Object.entries(layoutRep.value)) {
 		const sourceName = 'streamer-rtmp-'+key;
