@@ -35,6 +35,12 @@
                   v-model="streamerLocal.twitter"
                 ></v-text-field>
               </v-flex>
+              <v-flex xs6>
+                <v-text-field
+                  label="Twitch"
+                  v-model="streamerLocal.twitch"
+                ></v-text-field>
+              </v-flex>
               <v-flex xs12>
                 <v-text-field
                   label="Relay URL"
