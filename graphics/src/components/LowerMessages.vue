@@ -9,6 +9,7 @@
 
 <script>
 import { TweenMax, TimelineLite } from 'gsap/TweenMax'
+import { eachSeries } from 'async-es'
 
 export default {
   name: 'LowerMessages',
@@ -28,7 +29,7 @@ export default {
   mounted() {
     const vm = this;
     vm.$data.scrollHoldDuration = nodecg.bundleConfig.omnibar.scrollHoldDuration;
-    this.runTimeline();
+    vm.runTimeline();
   },
   methods: {
     visibilityChanged (isVisible, entry) {
@@ -52,25 +53,34 @@ export default {
       })
       return hideLabel;
     },
+    populateMessages: function() {
+      const vm = this;
+
+      let ctaRep = nodecg.readReplicant('tds:ctamessages', ctas => {
+        vm.$data.ctaMessages = [];
+        eachSeries(ctas, (cta, callback) => {
+          if (cta.active === true) {
+            vm.$data.ctaMessages.push(cta);
+          }
+          callback();
+        }, err => {
+          if (err) nodecg.log.error(err);
+          return;
+        });
+      });
+    },
     processNextPart: function() {
       const vm = this;
+
       if (vm.parts.length > 0) {
         const part = vm.parts.shift().bind(vm);
         vm.promisifyTimeline(part())
           .then(vm.processNextPart)
           .catch(error => {
-            nodecg.log.console.error('Error when running main loop:', error);
+            nodecg.log.error('Error when running main loop:', error);
           });
       } else {
         // Start over from the top
-        let ctaRep = nodecg.readReplicant('tds:ctamessages', ctas => {
-          vm.$data.ctaMessages = [];
-          ctas.forEach(function (cta) {
-            if (cta.active === true) {
-              vm.$data.ctaMessages.push(cta);
-            }
-          });
-        });
         vm.runTimeline();
       }
     },
@@ -80,17 +90,24 @@ export default {
       });
     },
     runTimeline: function() {
-      this.parts = [
-        // this.showCurrent,
-        // this.showUpNext,
-        this.showCTA
-      ]
-      this.processNextPart();
-    },
-    setContent: function(text) {
       const vm = this;
+      vm.populateMessages();
+      vm.parts = [
+        vm.showCurrent,
+        vm.showUpNext,
+        vm.showCTA
+      ]
 
-      vm.$data.message.content = text;
+      vm.processNextPart();
+    },
+    setContent: function(tl, text) {
+      const vm = this;
+      tl.to({}, 0.03, {});
+      tl.call(() => {
+        tl.pause();
+        vm.$data.message.content = text;
+        tl.resume(null, false);
+      });
     },
     showContent: function(tl) {
       const vm = this;
@@ -104,25 +121,24 @@ export default {
 
       return tl;
     },
-    showCTA: function() {
+    showCTA: function(message) {
       const vm = this;
       const tl = new TimelineLite();
+      const messages = vm.ctaMessages;
 
-      vm.$data.ctaMessages.forEach(function (message) {
-        nodecg.log.info(message.content);
-        vm.hideLabel();
-        vm.setContent(message.content);
+      vm.hideLabel();
+      messages.forEach(message => {
+        vm.setContent(tl, message.content);
         vm.showContent(tl);
         vm.hideContent(tl);
       });
-
       return tl;
     },
     showCurrent: function() {
       const vm = this;
       const tl = new TimelineLite();
 
-      vm.setContent('Putt-Putt Goes To Wal-Mart');
+      vm.setContent(tl, 'Putt-Putt Goes To Wal-Mart');
       vm.showLabel('Now?');
       vm.showContent(tl);
       vm.hideContent(tl);
@@ -148,7 +164,7 @@ export default {
       const vm = this;
       const tl = new TimelineLite();
 
-      vm.setContent('Call of Duty: World War Now');
+      vm.setContent(tl, 'Call of Duty: World War Now');
       vm.showLabel('Next!', '#463f1a');
       vm.showContent(tl);
       vm.hideContent(tl);
