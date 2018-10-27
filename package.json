@@ -87,9 +87,12 @@
     "ws": "^6.1.0"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.4.2",
     "css-loader": "^1.0.0",
+    "file-loader": "^2.0.0",
     "parallel-webpack": "^2.3.0",
     "style-loader": "^0.23.1",
+    "url-loader": "^1.1.2",
     "vue-loader": "^15.4.2",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^4.20.2"

@@ -1,26 +1,52 @@
 <template>
   <v-flex xs4>
     <v-card>
-      <v-card-title>
-        <div class="headline">{{ streamer.name }}</div>
-      </v-card-title>
       <v-card-text>
+        <v-toolbar dark>
+          <v-toolbar-title>{{ streamer.name }}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <StreamersDialog :streamer="streamer">
+            <v-icon slot="btnIcon">edit</v-icon>
+          </StreamersDialog>
+        </v-toolbar>
         <v-list>
           <v-list-tile>
+            <v-list-tile-avatar>
+              <v-icon>fas fa-video</v-icon>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>{{ streamer.url }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile v-if="streamer.twitch">
+            <v-list-tile-avatar>
+              <v-icon>fab fa-twitch</v-icon>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>{{ streamer.twitch }}</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile v-if="streamer.twitter">
+            <v-list-tile-avatar>
+              <v-icon>fab fa-twitter</v-icon>
+            </v-list-tile-avatar>
+
             <v-list-tile-content>
               <v-list-tile-title>{{ streamer.twitter }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
 
-          <v-list-tile>
+          <v-list-tile v-if="streamer.discord">
+            <v-list-tile-avatar>
+              <v-icon>fab fa-discord</v-icon>
+            </v-list-tile-avatar>
+
             <v-list-tile-content>
               <v-list-tile-title>{{ streamer.discord }}</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-
-          <v-list-tile>
-            <v-list-tile-content>
-              <v-list-tile-title>{{ streamer.url }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -77,8 +103,13 @@
 </template>
 
 <script>
+import StreamersDialog from './StreamersDialog.vue'
+
 export default {
   name: 'StreamersCard',
+  components: {
+    StreamersDialog
+  },
   props: {
     streamer: {
       type: Object,
@@ -95,6 +126,14 @@ export default {
         streamer: streamer
       });
     }
+  },
+  mounted() {
+    const vm = this;
+    nodecg.listenFor('streamerUpdated', (newStreamer) => {
+      if(newStreamer.name === streamer.name) {
+        vm.streamer = newStreamer;
+      }
+    });
   }
 }
 </script>
