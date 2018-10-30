@@ -62,13 +62,13 @@
       {
         "file": "lower_bar.html",
         "width": 1920,
-        "height": 1080,
+        "height": 80,
         "singleInstance": false
       },
       {
         "file": "sidebar.html",
         "width": 1920,
-        "height": 1080,
+        "height": 1000,
         "singleInstance": false
       }
     ]
