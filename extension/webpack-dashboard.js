@@ -3,9 +3,9 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const webpack = require('webpack');
 
-dashJsPath = path.dirname(__dirname) + '/dashboard/';
-nodeModulesPath = path.dirname(__dirname) + '/node_modules';
-bowerModulesPath = path.dirname(__dirname) + '/bower_components';
+const dashJsPath = path.dirname(__dirname) + '/dashboard/';
+const nodeModulesPath = path.dirname(__dirname) + '/node_modules';
+const bowerModulesPath = path.dirname(__dirname) + '/bower_components';
 
 webpack([
   {

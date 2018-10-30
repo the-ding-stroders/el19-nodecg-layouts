@@ -3,9 +3,9 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const webpack = require('webpack');
 
-bowerModulesPath = path.dirname(__dirname) + '/bower_components';
-gfxJsPath = path.dirname(__dirname) + '/graphics/';
-nodeModulesPath = path.dirname(__dirname) + '/node_modules';
+const bowerModulesPath = path.dirname(__dirname) + '/bower_components';
+const gfxJsPath = path.dirname(__dirname) + '/graphics/';
+const nodeModulesPath = path.dirname(__dirname) + '/node_modules';
 
 webpack([
   {
