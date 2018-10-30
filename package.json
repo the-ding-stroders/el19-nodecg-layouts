@@ -70,6 +70,12 @@
         "width": 1920,
         "height": 1000,
         "singleInstance": false
+      },
+      {
+        "file": "layout.html",
+        "width": 1920,
+        "height": 1000,
+        "singleInstance": false
       }
     ]
   },
