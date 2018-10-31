@@ -1,9 +1,8 @@
 <template>
   <div id="app">
     <v-app>
-      <v-container grid-list-md class="mx-2">
-        <v-layout row wrap>
-          <!-- quad -->
+      <v-container grid-list-md class="mx-2 layout-container">
+        <v-layout row wrap align-center justify-center fill-height>
           <LayoutStreamer
             v-for="streamer in streamers"
             :streamer="streamer"
@@ -96,6 +95,9 @@ export default {
   left: 0;
   overflow: hidden;
   font-family:'SourceSansPro', sans-serif;
+}
+.layout-container {
+  height: 1000px;
 }
 .application {
   background: none !important;
