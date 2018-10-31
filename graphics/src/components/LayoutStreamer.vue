@@ -1,14 +1,18 @@
 <template>
-  <v-flex xs6 class="mb-4">
+  <v-flex
+    :xs12="size === 12"
+    :xs6="size === 6"
+    class="mb-4"
+  >
     <v-layout row wrap>
-      <v-flex xs12 class="pa-0">
+      <v-flex xs12 class="pa-1">
         <v-responsive
           :aspect-ratio="16/9"
-          width="770"
           class="video-border"
+          :max-width="maxWidth"
         ></v-responsive>
       </v-flex>
-      <v-flex xs6 class="pt-0">
+      <v-flex xs6 class="pl-2 pt-0">
         <v-layout row>
           <v-flex xs1 class="nametag-icon elevation-2">
             <v-icon text-xs-center>{{ tagIcon }}</v-icon>
@@ -27,7 +31,7 @@ export default {
   name: 'LayoutStreamer',
   props: {
     size: {
-      type: String,
+      type: Number,
       required: true
     },
     streamer: {
@@ -37,6 +41,7 @@ export default {
   },
   data () {
     return {
+      maxWidth: null,
       parts: [],
       tagIcon: '',
       tagText: '',
@@ -45,6 +50,15 @@ export default {
   },
   mounted() {
     const vm = this;
+
+    switch(vm.size) {
+      case 6:
+        vm.maxWidth = 770;
+        break;
+      case 12:
+        vm.maxWidth = 1600;
+        break;
+    }
 
     vm.tagIcon = 'far fa-id-card';
     vm.tagText = vm.streamer.name;

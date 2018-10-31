@@ -6,9 +6,8 @@
           <LayoutStreamer
             v-for="streamer in streamers"
             :streamer="streamer"
-            size="xs6"
-          >
-          </LayoutStreamer>
+            :size="size"
+          ></LayoutStreamer>
         </v-layout>
       </v-container>
     </v-app>
@@ -27,6 +26,7 @@ export default {
   data () {
     return {
       layout: '',
+      size: 6,
       streamers: {}
     }
   },
@@ -35,6 +35,9 @@ export default {
     const params = new URLSearchParams(location.search);
 
     vm.layout = params.get('layout');
+    if (vm.layout === "single") {
+      vm.size = 12;
+    }
     vm.getHash();
 
     window.onhashchange = function() {
@@ -60,22 +63,37 @@ export default {
 
       // Get the streamer replicant for later use
       const streamerRep = nodecg.readReplicant('tds:streamers', streamers => {
-        // Split on the delimiter "&" and for each key/val pair...
-        hash.split('&').forEach(function(q) {
-          const hashSplit = q.split(/=/);
-          // Get the property by splitting the entry
-          const prop = hashSplit[0];
-          // If the property is a streamer, add it. Otherwise, skip.
-          if (streamerParams.includes(prop)) {
-            // Get the value from the split entry
-            const val = hashSplit[1];
+        let BreakException = {};
 
-            // If the property and key are defined and they're a valid streamer
-            if (typeof prop !== 'undefined' && typeof val !== 'undefined' && streamers[val]) {
-              hashObj[prop] = streamers[val];
+        try {
+          // Split on the delimiter "&" and for each key/val pair...
+          hash.split('&').forEach(function(q, index) {
+            const hashSplit = q.split(/=/);
+            // Get the property by splitting the entry
+            const prop = hashSplit[0];
+            // If the property is a streamer, add it. Otherwise, skip.
+            if (streamerParams.includes(prop)) {
+              // Get the value from the split entry
+              const val = hashSplit[1];
+
+              // If the property and key are defined and they're a valid streamer
+              if (typeof prop !== 'undefined' && typeof val !== 'undefined' && streamers[val]) {
+                hashObj[prop] = streamers[val];
+              }
             }
-          }
-        });
+
+            switch(vm.layout) {
+              case 'single':
+                if (index === 0) throw BreakException;
+                break;
+              case 'double':
+                if (index === 1) throw BreakException;
+                break;
+            }
+          });
+        } catch (e) {
+          if (e !== BreakException) throw e;
+        }
 
         vm.streamers = hashObj;
         return;
