@@ -88,7 +88,7 @@ export default {
 
 <style>
 #app {
-  width: 1920px;
+  width: 1670px;
   height: 1000px;
   display: block;
   position: absolute;
