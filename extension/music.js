@@ -4,8 +4,14 @@ const mpd = require('mpd');
 const mpdCmd = mpd.cmd;
 
 var mpdConfig = nodecg.bundleConfig.mpd || {};
-var volume = mpdConfig.volume || 100;
-var currentVolume = volume;
+let currentVolume = nodecg.Replicant('mpd:currentVolume', { defaultValue: 0 });
+let targetVolumeRep = nodecg.Replicant('mpd:targetVolume', {
+	defaultValue: {
+		'foreground': mpdConfig.defaultVolume,
+		'background': mpdConfig.defaultVolume
+	}
+});
+let targetVolume = targetVolumeRep.value;
 var fadeInterval;
 var connected = false;
 
@@ -41,12 +47,12 @@ currentScene.on('change', (newVal, oldVal) => {
 	newVal = newVal ? newVal['name'].toLowerCase() : undefined;
 	oldVal = oldVal ? oldVal['name'].toLowerCase() : undefined;
 
-	// Stop music
+	// Start music
 	if (oldVal && !oldVal.includes('break') && newVal.includes('break')) {
-		fadeIn();
+		fadeTo('foreground');
 	}
 
-	// Start music
+	// Stop music
 	else if (oldVal && oldVal.includes('break') && !newVal.includes('break')) {
 		fadeOut();
 	}
@@ -57,7 +63,7 @@ nodecg.listenFor('pausePlaySong', () => {
 	if (songData.value.playing)
 		fadeOut();
 	else
-		fadeIn();
+		fadeTo('background');
 });
 nodecg.listenFor('skipSong', skipSong);
 
@@ -116,7 +122,7 @@ function onSystemMixer() {
 	client.sendCommand(mpdCmd("status", []), function(err, result) {
 		if (err) nodecg.log.info(err);
 		const status = mpd.parseKeyValueMessage(result);
-		currentVolume = status.volume;
+		currentVolume.value = status.volume;
 	});
 }
 
@@ -164,7 +170,7 @@ function shufflePlaylist() {
 
 // Used to set the player volume to whatever the variable is set to.
 function setVolume() {
-	client.sendCommand('setvol '+currentVolume)
+	client.sendCommand('setvol '+currentVolume.value)
 }
 
 // Used to fade out and pause the song.
@@ -172,13 +178,13 @@ function fadeOut() {
 	if (!connected) return;
 
 	clearInterval(fadeInterval);
-	// currentVolume = volume;
+	// currentVolume.value = volume;
 	// setVolume();
 
 	function loop() {
-		currentVolume--;
+		currentVolume.value--;
 		setVolume();
-		if (currentVolume <= 0) {
+		if (currentVolume.value <= 0) {
 			clearInterval(fadeInterval);
 			client.sendCommand('pause 1');
 		}
@@ -188,18 +194,18 @@ function fadeOut() {
 }
 
 // Used to unpause and fade in the song.
-function fadeIn() {
+function fadeTo(target) {
 	if (!connected) return;
 
 	clearInterval(fadeInterval);
-	currentVolume = 0;
+	currentVolume.value = 0;
 	client.sendCommand('pause 0');
 	setVolume();
 
 	function loop() {
-		currentVolume++;
+		currentVolume.value++;
 		setVolume();
-		if (currentVolume >= volume) {
+		if (currentVolume.value >= targetVolume[target]) {
 			clearInterval(fadeInterval);
 		}
 	}

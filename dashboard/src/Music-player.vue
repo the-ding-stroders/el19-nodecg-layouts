@@ -29,6 +29,15 @@
             >
               <v-icon>skip_next</v-icon>
             </v-btn>
+            <v-divider></v-divider>
+            <v-slider
+              v-model="volume"
+              :disabled="!playing"
+              append-icon="volume_up"
+              prepend-icon="volume_down"
+              @click:append="volUp"
+              @click:prepend="volDown"
+            ></v-slider>
           </v-flex>
         </v-layout>
       </v-container>
@@ -41,7 +50,8 @@ export default {
   name: 'app',
   data: () => ({
     currentTrack: 'No Track Playing',
-    playing: false
+    playing: false,
+    volume: 100
   }),
   methods: {
     pausePlaySong: function() {
@@ -49,9 +59,16 @@ export default {
     },
     skipSong: function() {
       nodecg.sendMessage('skipSong');
+    },
+    volDown: function() {
+      this.volume = (this.volume - 10) || 0;
+    },
+    volUp: function() {
+      this.volume = (this.volume + 10) || 100;
     }
   },
   mounted() {
+    const currentVolume = nodecg.Replicant('mpd:currentVolume');
     const songData = nodecg.Replicant('songData');
     const vm = this;
     songData.on('change', (newVal) => {
@@ -61,6 +78,10 @@ export default {
         vm.$data.playing = false;
       }
       vm.$data.currentTrack = newVal.title;
+    })
+
+    currentVolume.on('change', (newVol) => {
+      vm.volume = newVol;
     })
   }
 }
