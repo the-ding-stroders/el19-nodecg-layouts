@@ -14,6 +14,11 @@ let targetVolumeRep = nodecg.Replicant('mpd:targetVolume', {
 let targetVolume = targetVolumeRep.value;
 var fadeInterval;
 var connected = false;
+const musicScenes = [
+	'break',
+	'postshow',
+	'preshow'
+]
 
 // Stores song data to be displayed on layouts.
 var songData = nodecg.Replicant('songData', {
@@ -48,13 +53,16 @@ currentScene.on('change', (newVal, oldVal) => {
 	oldVal = oldVal ? oldVal['name'].toLowerCase() : undefined;
 
 	// Start music
-	if (oldVal && !oldVal.includes('break') && newVal.includes('break')) {
-		fadeTo('foreground');
-	}
-
-	// Stop music
-	else if (oldVal && oldVal.includes('break') && !newVal.includes('break')) {
-		fadeOut();
+	if (oldVal) {
+		musicScenes.forEach((scene) => {
+			if (newVal.includes(scene)) {
+				fadeTo('foreground');
+				return
+			} else if (songData.value.playing) {
+				fadeTo('background');
+				return;
+			}
+		});
 	}
 });
 
@@ -200,14 +208,17 @@ function fadeTo(target) {
 	if (!connected) return;
 
 	clearInterval(fadeInterval);
-	currentVolume.value = 0;
 	client.sendCommand('pause 0');
 	setVolume();
 
 	function loop() {
-		currentVolume.value++;
+		if (currentVolume.value > targetVolume[target]) {
+			currentVolume.value--;
+		} else {
+			currentVolume.value++;
+		}
 		setVolume();
-		if (currentVolume.value >= targetVolume[target]) {
+		if (currentVolume.value == targetVolume[target]) {
 			clearInterval(fadeInterval);
 		}
 	}
