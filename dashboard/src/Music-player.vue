@@ -38,6 +38,22 @@
               @click:append="volUp"
               @click:prepend="volDown"
             ></v-slider>
+            <v-btn
+              @click="setLevel('foreground')"
+              color="success"
+              :disabled="!playing"
+              outline
+            >
+              Set Foreground Level
+            </v-btn>
+            <v-btn
+              @click="setLevel('background')"
+              color="success"
+              :disabled="!playing"
+              outline
+            >
+              Set Background Level
+            </v-btn>
           </v-flex>
         </v-layout>
       </v-container>
@@ -56,6 +72,13 @@ export default {
   methods: {
     pausePlaySong: function() {
       nodecg.sendMessage('pausePlaySong');
+    },
+    setLevel: function(target) {
+      const data = {
+        target: target,
+        volume: this.volume
+      }
+      nodecg.sendMessage('setLevel', data);
     },
     skipSong: function() {
       nodecg.sendMessage('skipSong');

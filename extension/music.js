@@ -76,6 +76,9 @@ nodecg.listenFor('pausePlaySong', () => {
 	}
 });
 nodecg.listenFor('skipSong', skipSong);
+nodecg.listenFor('setLevel', data => {
+	targetVolume[data.target] = data.volume;
+});
 
 function onConnect() {
 	connected = true;
