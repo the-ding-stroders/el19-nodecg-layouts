@@ -159,12 +159,6 @@ function updateCurrentSong() {
 	});
 }
 
-// Can be used to pause/unpause music track.
-function toggleSongPlayback() {
-	var pause = songData.value.playing ? 1 : 0;
-	client.sendCommand('pause '+pause);
-}
-
 // Can be used to skip to the next song.
 function skipSong() {
 	client.sendCommand('next');
