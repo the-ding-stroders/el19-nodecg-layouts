@@ -190,6 +190,7 @@ function fadeOut() {
 		setVolume();
 		if (currentVolume.value <= 0) {
 			clearInterval(fadeInterval);
+			client.sendCommand('next');
 			client.sendCommand('pause 1');
 		}
 	}
