@@ -62,7 +62,7 @@ if (nodecg.bundleConfig && nodecg.bundleConfig.donationSocketUrl) {
       nodecg.sendMessage('donation', donation);
 			if (autoUpdateTotal.value) {
 				total.value = {
-					raw: donation.rawAmount,
+					raw: donation.rawNewTotal,
 					formatted: donation.newTotal
 				};
 			}
