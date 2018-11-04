@@ -34,7 +34,14 @@ export default {
   },
   mounted: function() {
     const vm = this;
-    this.getTopDonations();
+    let donationRep = nodecg.Replicant('donations');
+    vm.getTopDonations();
+
+    donationRep.on('change', () => {
+      setTimeout(function(){
+        vm.getTopDonations();
+      }, 3000);
+    })
   }
 }
 </script>

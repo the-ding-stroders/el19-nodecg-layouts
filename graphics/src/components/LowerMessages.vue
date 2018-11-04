@@ -23,8 +23,15 @@ export default {
       contentVisible: false,
       labelVisible: false,
       ctaMessages: [],
+      schedule: {
+        'current': 'Current',
+        'next': 'Next'
+      },
       scrollHoldDuration: 5
     }
+  },
+  created() {
+    this.populateSchedule();
   },
   mounted() {
     const vm = this;
@@ -70,6 +77,33 @@ export default {
         });
       });
     },
+    populateSchedule: function() {
+      const vm = this;
+
+      nodecg.readReplicant('tds:schedule', schedule => {
+        nodecg.readReplicant('tds:schedTake', schedIndexes => {
+          const schedCurrent = schedule[schedIndexes.current];
+          const schedNext = schedule[schedIndexes.next];
+
+          if (schedCurrent.type === 'game') {
+            vm.schedule.current = schedCurrent.gameName;
+          } else if (schedCurrent.type === 'other') {
+            vm.schedule.current = schedCurrent.otherName;
+          } else {
+            vm.schedule.current = schedCurrent.type;
+          }
+
+          if (schedNext.type === 'game') {
+            vm.schedule.next = schedNext.gameName;
+          } else if (schedNext.type === 'other') {
+            vm.schedule.next = schedNext.otherName;
+          } else {
+            vm.schedule.next = schedNext.type;
+          }
+          return;
+        });
+      });
+    },
     processNextPart: function() {
       const vm = this;
 
@@ -92,11 +126,12 @@ export default {
     },
     runTimeline: function() {
       const vm = this;
+      vm.populateSchedule();
       vm.populateMessages();
       vm.parts = [
+        vm.showCTA,
         vm.showCurrent,
-        vm.showUpNext,
-        vm.showCTA
+        vm.showUpNext
       ]
 
       vm.processNextPart();
@@ -139,10 +174,11 @@ export default {
       const vm = this;
       const tl = new TimelineLite();
 
-      vm.setContent(tl, 'Putt-Putt Goes To Wal-Mart');
+      vm.setContent(tl, vm.schedule.current);
       vm.showLabel('Now?');
       vm.showContent(tl);
       vm.hideContent(tl);
+
       return tl;
     },
     showLabel: function(text, color='#6441A4') {
@@ -166,7 +202,7 @@ export default {
       const vm = this;
       const tl = new TimelineLite();
 
-      vm.setContent(tl, 'Call of Duty: World War Now');
+      vm.setContent(tl, vm.schedule.next);
       vm.showLabel('Next!', '#463f1a');
       vm.showContent(tl);
       vm.hideContent(tl);

@@ -53,14 +53,13 @@ if (nodecg.bundleConfig && nodecg.bundleConfig.donationSocketUrl) {
 			}
 
 			const donation = formatDonation(data);
-			nodecg.sendMessage('donation', donation);
 			donationRep.value = {
 				'id': data.id,
 				'name': data.name,
 				'amount': donation.amount,
         'raw': donation.rawAmount
 			}
-
+      nodecg.sendMessage('donation', donation);
 			if (autoUpdateTotal.value) {
 				total.value = {
 					raw: donation.rawAmount,

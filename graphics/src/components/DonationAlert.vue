@@ -1,10 +1,9 @@
 <template>
   <div class="donation-alert">
     <div class="new-donation-text">
-      <span>$19.95</span>
+      <span>{{ donation.amount }}</span>
       <span>from</span>
-      <span>ShippingAndHandling</span>
-      <span> - Hello, World!</span>
+      <span>{{ donation.name }}</span>
     </div>
     <div class="slash-bot-wrapper">
       <div class="slash-bot-animate">
@@ -22,10 +21,16 @@
 <script>
 export default {
   name: 'DonationAlert',
+  data () {
+    return {
+      donation: {}
+    }
+  },
   mounted() {
     const vm = this;
-    var donationRep = nodecg.Replicant('donations');
-    donationRep.on('change', (newValue) => {
+    let donationRep = nodecg.Replicant('donations');
+    nodecg.listenFor('donation', () => {
+      vm.donation = donationRep.value;
       vm.showNewDonation();
       setTimeout(function(){
         vm.hideNewDonation();

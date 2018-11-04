@@ -42,14 +42,19 @@ export default {
   },
   data() {
     return {
-      donationAmount: 100
+      donationAmount: 0
     }
   },
   mounted() {
     const vm = this;
-    var donationRep = nodecg.Replicant('donations');
-    donationRep.on('change', (newValue) => {
-      vm.donationAmount = vm.donationAmount + newValue.raw;
+    let totalRep = nodecg.Replicant('total');
+
+    nodecg.readReplicant('total', total => {
+      vm.donationAmount = total.raw;
+    });
+
+    nodecg.listenFor('donation', () => {
+      vm.donationAmount = totalRep.value.raw;
     })
   }
 }
