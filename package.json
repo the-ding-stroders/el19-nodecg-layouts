@@ -21,7 +21,7 @@
     "nodecg-bundle"
   ],
   "nodecg": {
-    "compatibleRange": "^1.1.1",
+    "compatibleRange": "^1.6.1",
     "dashboardPanels": [
       {
         "name": "obs-connection",
