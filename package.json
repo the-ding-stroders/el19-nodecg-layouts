@@ -1,0 +1,113 @@
+{
+  "name": "tds-el18-layouts",
+  "version": "1.0.0",
+  "description": "Our NodeCG bundle for the Extra Life 2018 Streamaganza",
+  "homepage": "https://dingstroders.com",
+  "author": {
+    "name": "David Thomas",
+    "email": "dev@synth3.tk",
+    "url": "https://synth3.tk"
+  },
+  "files": [
+    "dashboard",
+    "graphics",
+    "extension.js",
+    "extension"
+  ],
+  "keywords": [
+    "nodecg",
+    "extralife",
+    "donations",
+    "nodecg-bundle"
+  ],
+  "nodecg": {
+    "compatibleRange": "^1.1.1",
+    "dashboardPanels": [
+      {
+        "name": "obs-connection",
+        "title": "OBS Connection",
+        "width": 3,
+        "file": "obs-connection.html",
+        "workspace": "1 - Overview"
+      },
+      {
+        "name": "music-player",
+        "title": "Music Player",
+        "width": 3,
+        "file": "music-player.html",
+        "workspace": "1 - Overview"
+      },
+      {
+        "name": "cta",
+        "title": "Call-To-Actions",
+        "width": 5,
+        "file": "cta.html",
+        "workspace": "2 - Lower Third"
+      },
+      {
+        "name": "schedule",
+        "title": "Schedule",
+        "width": 7,
+        "file": "schedule.html",
+        "workspace": "2 - Lower Third"
+      },
+      {
+        "name": "3 - streamers",
+        "title": "Streamer Controls",
+        "file": "streamers.html",
+        "fullbleed": true
+      }
+    ],
+    "graphics": [
+      {
+        "file": "lower_bar.html",
+        "width": 1920,
+        "height": 80,
+        "singleInstance": false
+      },
+      {
+        "file": "sidebar.html",
+        "width": 1920,
+        "height": 1000,
+        "singleInstance": false
+      },
+      {
+        "file": "layout.html",
+        "width": 1920,
+        "height": 1080,
+        "singleInstance": false
+      }
+    ]
+  },
+  "repository": "https://github.com/nodecg/nodecg.git",
+  "license": "MIT",
+  "dependencies": {
+    "async-es": "^2.6.1",
+    "discord.js": "^11.4.2",
+    "gsap": "^2.0.2",
+    "mpd": "^1.3.0",
+    "nodecg-utility-obs": "^4.4.0",
+    "odometer": "github:the-ding-stroders/odometer",
+    "reconnecting-websocket": "^4.1.5",
+    "request": "^2.88.0",
+    "vmix-js-utils": "^1.0.13",
+    "vue": "^2.5.17",
+    "vue-animejs": "^1.0.1",
+    "vue-material": "^1.0.0-beta-10.2",
+    "vue-observe-visibility": "^0.4.3",
+    "vue-odometer": "github:the-ding-stroders/vue-odometer",
+    "vuetify": "^1.3.0",
+    "ws": "^6.1.0"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.4.2",
+    "css-loader": "^1.0.0",
+    "file-loader": "^2.0.0",
+    "parallel-webpack": "^2.3.0",
+    "style-loader": "^0.23.1",
+    "url-loader": "^1.1.2",
+    "vue-loader": "^15.4.2",
+    "vue-template-compiler": "^2.5.17",
+    "webpack": "^4.20.2"
+  }
+}

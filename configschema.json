@@ -1,0 +1,41 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"discordToken": {
+			"type": "string",
+			"description": "Client token to use for authenticating the Discord bot"
+		},
+		"donationSocketUrl": {
+			"type": "string",
+			"description": "URL to the donation websocket server."
+		},
+		"donationStatsUrl": {
+			"type": "string",
+			"description": "URL that provides the latest sum and number of donations."
+		},
+		"gameListUrl": {
+			"type": "string",
+			"description": "URL that provides a complete list of Twitch games."
+		},
+		"mpd": {
+			"type": "object",
+			"properties": {
+				"address": {"type": "string", "default": "localhost"},
+				"port": {"type": "integer", "default": 6600},
+				"defaultVolume": {"type": "integer", "default": 100}
+			}
+		},
+		"omnibar": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"scrollHoldDuration": {
+					"type": "number",
+					"description": "How long (in seconds) to hold items during a scroll.",
+					"default": 5
+				}
+			}
+		}
+	}
+}
