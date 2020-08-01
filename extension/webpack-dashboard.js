@@ -126,84 +126,45 @@ module.exports = [
       modules: [ nodeModulesPath, bowerModulesPath ]
     }
   },
-  // {
-  //   entry: dashJsPath + 'src/obs-connection.js',
-  //   mode: "development",
-  //   module: {
-  //     rules: [
-  //       {
-  //         test: /\.css$/,
-  //         use: [
-  //           'vue-style-loader',
-  //           'css-loader'
-  //         ]
-  //       },
-  //       {
-  //         test: /\.vue$/,
-  //         loader: 'vue-loader'
-  //       }
-  //     ]
-  //   },
-  //   output: {
-  //     path: dashJsPath + 'dist',
-  //     filename: 'obs-connection.bundle.js'
-  //   },
-  //   plugins: [
-  //     new HtmlWebpackPlugin({
-  //       template: dashJsPath + 'src/dashboard.ejs',
-  //       filename: dashJsPath + 'obs-connection.html'
-  //     }),
-  //     new VueLoaderPlugin()
-  //   ],
-  //   resolve: {
-  //     extensions: ['.js', '.vue', '.json'],
-  //     alias: {
-  //       'vue$': 'vue/dist/vue.esm.js'
-  //     }
-  //   },
-  //   resolveLoader: {
-  //     modules: [ nodeModulesPath, bowerModulesPath ]
-  //   }
-  // },
-  // {
-  //   entry: dashJsPath + 'src/music-player.js',
-  //   mode: "development",
-  //   module: {
-  //     rules: [
-  //       {
-  //         test: /\.css$/,
-  //         use: [
-  //           'vue-style-loader',
-  //           'css-loader'
-  //         ]
-  //       },
-  //       {
-  //         test: /\.vue$/,
-  //         loader: 'vue-loader'
-  //       }
-  //     ]
-  //   },
-  //   output: {
-  //     path: dashJsPath + 'dist',
-  //     filename: 'music-player.bundle.js'
-  //   },
-  //   plugins: [
-  //     new HtmlWebpackPlugin({
-  //       template: dashJsPath + 'src/dashboard.ejs',
-  //       filename: dashJsPath + 'music-player.html'
-  //     }),
-  //     new VueLoaderPlugin()
-  //   ],
-  //   resolve: {
-  //     extensions: ['.js', '.vue', '.json'],
-  //     alias: {
-  //       'vue$': 'vue/dist/vue.esm.js'
-  //     }
-  //   },
-  //   resolveLoader: {
-  //     modules: [ nodeModulesPath, bowerModulesPath ]
-  //   }
-  // },
+  {
+    entry: dashJsPath + 'src/music-player.js',
+    mode: "development",
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            'vue-style-loader',
+            'css-loader'
+          ]
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
+        }
+      ]
+    },
+    output: {
+      path: dashJsPath + 'dist',
+      filename: 'music-player.bundle.js'
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: dashJsPath + 'src/dashboard.ejs',
+        filename: dashJsPath + 'music-player.html'
+      }),
+      new VueLoaderPlugin()
+    ],
+    resolve: {
+      extensions: ['.js', '.vue', '.json'],
+      alias: {
+        'vue$': 'vue/dist/vue.esm.js'
+      }
+    },
+    resolveLoader: {
+      modules: [ nodeModulesPath, bowerModulesPath ]
+    }
+  },
   {
     entry: dashJsPath + 'src/schedule.js',
     mode: "development",
