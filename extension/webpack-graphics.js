@@ -3,46 +3,11 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const webpack = require('webpack');
 
-const bowerModulesPath = path.dirname(__dirname) + '/bower_components';
+const bowerModulesPath = path.dirname(__dirname) + '/node_modules/@bower_components';
 const gfxJsPath = path.dirname(__dirname) + '/graphics/';
 const nodeModulesPath = path.dirname(__dirname) + '/node_modules';
 
-webpack([
-  {
-    entry: gfxJsPath + 'src/sidebar.js',
-    mode: "development",
-    module: {
-      rules: [
-        {
-          test: /\.css$/,
-          use: [
-            'vue-style-loader',
-            'css-loader'
-          ]
-        },
-        {
-          test: /\.vue$/,
-          loader: 'vue-loader'
-        }
-      ]
-    },
-    output: {
-      path: gfxJsPath + 'dist',
-      filename: 'sidebar.bundle.js'
-    },
-    plugins: [
-      new VueLoaderPlugin()
-    ],
-    resolve: {
-      extensions: ['.js', '.vue', '.json'],
-      alias: {
-        'vue$': 'vue/dist/vue.esm.js'
-      }
-    },
-    resolveLoader: {
-      modules: [ nodeModulesPath, bowerModulesPath ]
-    }
-  },
+module.exports = [
   {
     entry: gfxJsPath + 'src/lowerbar.js',
     mode: "development",
@@ -58,6 +23,10 @@ webpack([
         {
           test: /\.vue$/,
           loader: 'vue-loader'
+        },
+        {
+          test: /\.otf$/,
+          loader: 'url-loader?limit=100000'
         }
       ]
     },
@@ -95,7 +64,7 @@ webpack([
           loader: 'vue-loader'
         },
         {
-          test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+          test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|otf)$/,
           loader: 'url-loader?limit=100000'
         }
       ]
@@ -116,11 +85,40 @@ webpack([
     resolveLoader: {
       modules: [ nodeModulesPath, bowerModulesPath ]
     }
+  },
+  {
+    entry: gfxJsPath + 'src/idle.js',
+    mode: "development",
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            'vue-style-loader',
+            'css-loader'
+          ]
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
+        }
+      ]
+    },
+    output: {
+      path: gfxJsPath + 'dist',
+      filename: 'idle.bundle.js'
+    },
+    plugins: [
+      new VueLoaderPlugin()
+    ],
+    resolve: {
+      extensions: ['.js', '.vue', '.json'],
+      alias: {
+        'vue$': 'vue/dist/vue.esm.js'
+      }
+    },
+    resolveLoader: {
+      modules: [ nodeModulesPath, bowerModulesPath ]
+    }
   }
-], (err, stats) => {
-  if (err || stats.hasErrors()) {
-    nodecg.log.error(stats);
-    return
-  }
-    nodecg.log.debug(stats);
-});
+];

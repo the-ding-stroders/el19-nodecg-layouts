@@ -16,3 +16,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.lower-messages-item {
+  width: 100%;
+}
+</style>

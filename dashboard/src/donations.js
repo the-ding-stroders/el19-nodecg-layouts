@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import App from './LowerBar.vue'
+import vuetify from '../../extension/plugins/vuetify.js'
+import App from './Donations.vue'
 
-import VueAnime from 'vue-animejs';
-
-Vue.use(VueAnime)
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -29,6 +27,7 @@ const store = new Vuex.Store({
 })
 
 new Vue({
+  vuetify,
   el: '#app',
   store: store,
   render: h => h(App)

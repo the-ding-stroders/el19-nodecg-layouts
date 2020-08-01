@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <script src="../bower_components/vue/dist/vue.js"></script>
-    <script src="js/src/donations.js"></script>
+  <meta charset="UTF-8">
+  <!--Import Google Icon Font-->
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css">
+  <style>
+    body {
+      margin: 0px !important;
+    }
+  </style>
 </head>
 <body>
-  <div id="donations-amount">Total Amount: {{ amount }}</div>
-  <div id="donations-total">Total Donations: {{ total }}</div>
-  <div id="donations-latest">
-    <p>Last 5 Donations:</p>
-    <ul>
-      <li>Number Uno - $0</li>
-      <li>Number Dos - $0</li>
-      <li>Number Tres - $0</li>
-      <li>Number Quatro - $0</li>
-      <li>Number Cinco - $0</li>
-    </ul>
-  </div>
-</body>
+  <div id="app"></div>
+<script src="dist/donations.bundle.js"></script></body>
 </html>

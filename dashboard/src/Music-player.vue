@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app dark>
+    <v-app>
       <v-container grid-list-md text-xs-center>
         <v-layout row wrap>
           <v-flex xs12>
@@ -12,29 +12,29 @@
               @click="pausePlaySong"
               color="primary"
             >
-              <v-icon>play_arrow</v-icon> Play Music
+              <v-icon>mdi-play</v-icon> Play Music
             </v-btn>
           	<v-btn
               v-else
               @click="pausePlaySong"
               color="success"
             >
-              <v-icon>pause</v-icon> Pause Music
+              <v-icon>mdi-pause</v-icon> Pause Music
             </v-btn>
           	<v-btn
               @click="skipSong"
               color="primary"
               :disabled="!playing"
-              outline
+              outlined
             >
-              <v-icon>skip_next</v-icon>
+              <v-icon>mdi-skip-next</v-icon>
             </v-btn>
             <v-divider></v-divider>
             <v-slider
               v-model="volume"
               :disabled="!playing"
-              append-icon="volume_up"
-              prepend-icon="volume_down"
+              append-icon="mdi-volume-plus"
+              prepend-icon="mdi-volume-minus"
               @click:append="volUp"
               @click:prepend="volDown"
             ></v-slider>
@@ -42,7 +42,7 @@
               @click="setLevel('foreground')"
               color="success"
               :disabled="!playing"
-              outline
+              outlined
             >
               Set Foreground Level
             </v-btn>
@@ -50,7 +50,7 @@
               @click="setLevel('background')"
               color="success"
               :disabled="!playing"
-              outline
+              outlined
             >
               Set Background Level
             </v-btn>

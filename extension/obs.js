@@ -1,6 +1,6 @@
 'use strict';
 const nodecg = require('./util/nodecg-api-context').get();
-const OBSUtility = require('nodecg-utility-obs');
+const {OBSUtility} = require('nodecg-utility-obs');
 const obs = new OBSUtility(nodecg);
 const layoutRep = nodecg.Replicant('tds:streamlayout', { defaultValue: {
 	'0': {'name': '', 'url': ''},

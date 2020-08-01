@@ -1,11 +1,9 @@
 import Vue from 'vue'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+import vuetify from '../../extension/plugins/vuetify.js'
 import App from './Obs-connection.vue'
 
-Vue.use(Vuetify)
-
 new Vue({
+  vuetify,
   el: '#app',
   render: h => h(App)
 })

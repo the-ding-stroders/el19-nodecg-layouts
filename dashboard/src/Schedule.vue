@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app dark>
+    <v-app>
       <v-container grid-list-md text-xs-center>
         <v-layout row wrap>
           <v-flex xs12 align-center justify-center>
@@ -26,10 +26,12 @@
               <v-toolbar-title>Schedule</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-dialog v-model="dialog" persistent max-width="500px">
-                <v-btn slot="activator" dark>
-                  <v-icon slot="btnIcon">playlist_add</v-icon>
-                  New Item
-                </v-btn>
+                <template v-slot:activator="{ on }">
+                  <v-btn v-on="on" slot="activator" dark>
+                    <v-icon slot="btnIcon">playlist_add</v-icon>
+                    New Item
+                  </v-btn>
+                </template>
                 <v-card>
                   <v-card-title>
                     <span class="headline">Schedule Item</span>
@@ -38,36 +40,33 @@
                     <v-container grid-list-md>
                       <v-form ref="form">
                         <v-layout wrap>
-                          <v-flex xs6>
-                            <v-radio-group v-model="editedItem.type" :mandatory="true">
-                              <v-radio label="Game" value="game"></v-radio>
-                              <v-radio label="Break" value="break">Break</v-radio>
-                              <v-radio label="Other" value="other">Other</v-radio>
-                            </v-radio-group>
-                          </v-flex>
                           <v-flex xs12>
                             <v-autocomplete
-                              v-if="editedItem.type==='game'"
-                              v-model="editedItem.gameId"
-                              :items="gameList"
-                              label="Game"
-                              item-text="fields.name"
-                              item-value="pk"
+                              v-model="schedItem.category"
+                              :filter="customFilter"
+                              :items="items"
+                              :loading="isLoading"
+                              :search-input.sync="search"
+                              :mandatory="true"
+                              hide-no-data
+                              item-text="name"
+                              item-value="_id"
+                              label="Twitch Category"
+                              placeholder="Start typing to search..."
+                              return-object
                             ></v-autocomplete>
-                            <v-text-field
-                              v-if="editedItem.type==='other'"
-                              v-model="editedItem.otherName"
-                              label="Other Name"
-                            ></v-text-field>
                           </v-flex>
+                          <v-text-field
+                            v-model="schedItem.customTitle"
+                            label="Custom Title"
+                          ></v-text-field>
                         </v-layout>
                       </v-form>
                     </v-container>
-                    <small>*indicates required field</small>
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" flat @click.native="close()">Cancel</v-btn>
+                    <v-btn color="blue darken-1" text @click.native="close()">Cancel</v-btn>
                     <v-btn color="success darken-1" @click="save()">Save</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -75,31 +74,51 @@
             </v-toolbar>
 
             <v-data-table
-              hide-headers
+              :headers="headers"
               :items="schedItems"
             >
-              <template slot="items" slot-scope="props">
-                <td>{{ props.item.type }}</td>
-
-                <td v-if="props.item.type==='game'">{{ props.item.gameName }}</td>
-                <td v-else-if="props.item.type==='other'">{{ props.item.otherName }}</td>
-                <td v-else></td>
-
-                <td class="justify-center layout px-0">
-                  <v-icon
-                    small
-                    class="mr-2"
-                    @click="editItem(props)"
-                  >
-                    edit
-                  </v-icon>
-                  <v-icon
-                    small
-                    @click="deleteItem(props)"
-                  >
-                    delete
-                  </v-icon>
-                </td>
+              <template v-slot:body="{ items }">
+                <tbody>
+                  <tr v-for="(item, index) in items" :key="item.category._id">
+                    <td>{{ item.category.name }}</td>
+                    <td v-if="item.customTitle">{{ item.customTitle }}</td>
+                      <td v-else></td>
+                    <td v-if="currentIndexLive === index || nextIndexLive === index">
+                      <v-chip
+                        class="ma-2"
+                        :color="getChipColor('live', index)"
+                      >
+                        {{ getChipText('live', index) }}
+                      </v-chip>
+                    </td>
+                      <td v-else></td>
+                    <td v-if="currentIndex !== currentIndexLive && (currentIndex === index || nextIndex === index)">
+                      <v-chip
+                        class="ma-2"
+                        :color="getChipColor('deck', index)"
+                        outlined
+                      >
+                        {{ getChipText('deck', index) }}
+                      </v-chip>
+                    </td>
+                      <td v-else></td>
+                    <td class="justify-center layout px-0">
+                      <v-icon
+                        small
+                        class="mr-2"
+                        @click="editItem(index)"
+                      >
+                        edit
+                      </v-icon>
+                      <v-icon
+                        small
+                        @click="deleteItem(index)"
+                      >
+                        delete
+                      </v-icon>
+                    </td>
+                  </tr>
+                </tbody>
               </template>
               <template slot="no-data">
                 <v-alert
@@ -120,58 +139,124 @@
 export default {
   name: 'app',
   created() {
-    nodecg.readReplicant('tds:schedule', schedule => {
+    nodecg.readReplicant('schedule', 'tds-2020-layouts', schedule => {
       this.schedItems = schedule;
     });
-    nodecg.readReplicant('tds:twitchGames', games => {
-      this.gameList = games;
-    });
-    nodecg.Replicant('tds:schedTake', { defaultValue: {
+    nodecg.Replicant('schedTake', 'tds-2020-layouts', { defaultValue: {
       'current': 0,
       'next': 1
     }});
-    nodecg.readReplicant('tds:schedTake', schedTake => {
-      this.currentIndex = schedTake.current;
-      this.nextIndex = schedTake.next;
+    nodecg.readReplicant('schedTake', 'tds-2020-layouts', schedTake => {
+      this.currentIndex = this.currentIndexLive = schedTake.current;
+      this.nextIndex = this.nextIndexLive = schedTake.next;
     });
   },
   data: () => ({
+    categoryEntries: [],
     currentIndex: 0,
+    currentIndexLive: 0,
     defaultItem: {
-      gameId: null,
-      gameName: null,
-      otherName: null,
-      type: null
+      customTitle: null,
+      category: null
     },
     dialog: false,
     editedIndex: -1,
-    editedItem: {
-      gameId: null,
-      gameName: null,
-      otherName: null,
-      type: null
-    },
-    gameList: [],
+    headers: [
+        {
+            text: 'Category',
+            value: 'category.name'
+        },
+        {
+            text: 'Custom Title',
+            value: 'customTitle'
+        },
+        {
+            text: 'Live?'
+        },
+        {
+            text: 'On Deck?'
+        },
+        {
+            text: 'Actions'
+        }
+    ],
+    isLoading: false,
     nextIndex: 1,
-    schedItems: []
+    nextIndexLive: 1,
+    schedItem: {
+        customTitle: null,
+        category: null
+    },
+    schedItems: [],
+    search: null
   }),
   methods: {
     close () {
       this.dialog = false
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      }, 300)
+      this.schedItem = Object.assign({}, this.defaultItem)
+      this.editedIndex = -1
+      this.search = null
     },
-    deleteItem (schedItem) {
+    customFilter (item, queryText, itemText) {
+        if(queryText < 4) return false;
+        return queryText;
+    },
+    deleteItem (index) {
       const schedArr = JSON.parse(JSON.stringify(this.schedItems));
-      confirm('Are you sure you want to delete this item?') && schedArr.splice(schedItem.index, 1)
+      confirm('Are you sure you want to delete this item?') && schedArr.splice(index, 1)
       this.schedItems = schedArr;
     },
-    editItem (schedItem) {
-      this.editedIndex = schedItem.index;
-      this.editedItem = Object.assign({}, schedItem.item)
+    editItem (index) {
+      this.editedIndex = index;
+      this.schedItem = Object.assign({}, this.schedItems[index])
+      this.search = this.schedItem.category.name
       this.dialog = true
+    },
+    fetchEntries(val) {
+        // Load items from Twitch API
+        nodecg.sendMessage('searchTwitchCategories', val)
+            .then(result => {
+                this.categoryEntries = result
+            }).catch(error => {
+                console.error(error)
+            })
+            .finally(() => (this.isLoading = false))
+    },
+    fetchEntriesDebounced(val) {
+        clearTimeout(this._searchTimerId)
+        this._searchTimerId = setTimeout(() => {
+            this.fetchEntries(val)
+        }, 500) /* 500ms throttle */
+    },
+    getChipColor(liveOrDeck, index) {
+      if (liveOrDeck === 'deck') {
+        if (index === this.currentIndex) {
+          return 'rgba(0, 100, 0, 1)'
+        } else {
+          return 'rgba(255, 140, 0, 1)'
+        }
+      } else {
+        if (index === this.currentIndexLive) {
+          return 'rgba(0, 100, 0, 1)'
+        } else {
+          return 'rgba(255, 140, 0, 1)'
+        }
+      }
+    },
+    getChipText(liveOrDeck, index) {
+      if (liveOrDeck === 'deck') {
+        if (index === this.currentIndex) {
+          return 'current'
+        } else {
+          return 'next'
+        }
+      } else {
+        if (index === this.currentIndexLive) {
+          return 'current'
+        } else {
+          return 'next'
+        }
+      }
     },
     goNext() {
       this.currentIndex++;
@@ -183,40 +268,42 @@ export default {
       this.nextIndex--;
     },
     save () {
-      let schedArr = JSON.parse(JSON.stringify(this.schedItems));
-      const GAME_LIST_URL = nodecg.bundleConfig.gameListUrl;
-      this.$http.get(GAME_LIST_URL + '/' + this.editedItem.gameId).then(response => {
-         this.editedItem.gameName = response.body[0].fields.name;
-         if (this.editedIndex > -1) {
-           Object.assign(this.schedItems[this.editedIndex], this.editedItem)
-         } else {
-           schedArr.push(this.editedItem)
-           this.schedItems = schedArr;
-         }
-         this.close()
-      }, response => {
+        let schedArr = JSON.parse(JSON.stringify(this.schedItems));
         if (this.editedIndex > -1) {
-          Object.assign(this.schedItems[this.editedIndex], this.editedItem)
+          Object.assign(this.schedItems[this.editedIndex], this.schedItem)
         } else {
-          schedArr.push(this.editedItem)
+          schedArr.push(this.schedItem)
           this.schedItems = schedArr;
         }
         this.close()
-      })
     },
     takeItems () {
-      let schedTakeRep = nodecg.Replicant('tds:schedTake');
-      schedTakeRep.value.current = this.currentIndex;
-      schedTakeRep.value.next = this.nextIndex;
+      const schedTakeRep = nodecg.Replicant('schedTake', 'tds-2020-layouts');
+      schedTakeRep.value.current = this.currentIndexLive = this.currentIndex;
+      schedTakeRep.value.next = this.nextIndexLive = this.nextIndex;
     },
+  },
+  computed: {
+    items () {
+      return this.categoryEntries.map(entry => {
+          return Object.assign({}, entry)
+      })
+    }
   },
   watch: {
     dialog (val) {
       val || this.close()
     },
     schedItems (items) {
-      const schedRep = nodecg.Replicant('tds:schedule');
+      const schedRep = nodecg.Replicant('schedule', 'tds-2020-layouts');
       schedRep.value = items;
+    },
+    search (val) {
+        // No query sent
+        if (!val) return
+
+        this.isLoading = true
+        this.fetchEntriesDebounced(val)
     }
   }
 }

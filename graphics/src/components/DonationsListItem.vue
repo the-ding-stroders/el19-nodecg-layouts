@@ -1,6 +1,6 @@
 <template>
   <div class="donation" :class="'id-' + donation.id">
-    <span>{{ donation.amount }} - {{ donation.name }}</span>
+    <span>${{ donation.amount }} - {{ donation.name }}</span>
   </div>
 </template>
 
@@ -23,11 +23,11 @@ export default {
 
 <style>
 .donation {
-  width: 450px;
+  width: 200px;
   letter-spacing: 1px;
   display: flex;
-  height: 30px;
-  line-height: 30px;
+  /* height: 30px; */
+  /* line-height: 30px; */
   margin: 0 10px;
 }
 .donation div {

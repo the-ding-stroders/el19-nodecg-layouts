@@ -1,12 +1,10 @@
 import '@fortawesome/fontawesome-free/css/all.css'
 import Vue from 'vue'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+import vuetify from '../../extension/plugins/vuetify.js'
 import App from './Streamers.vue'
 
-Vue.use(Vuetify)
-
 new Vue({
+  vuetify,
   el: '#app',
   render: h => h(App)
 })

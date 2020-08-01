@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './Sidebar.vue'
+import App from './Idle.vue'
 
 new Vue({
   el: '#app',

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app dark>
+    <v-app>
       <v-container grid-list-md text-xs-center>
         <v-form ref="form">
           <v-layout row wrap>

@@ -1,13 +1,14 @@
 const nodecg = require('./util/nodecg-api-context').get();
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const webpack = require('webpack');
 
 const dashJsPath = path.dirname(__dirname) + '/dashboard/';
 const nodeModulesPath = path.dirname(__dirname) + '/node_modules';
-const bowerModulesPath = path.dirname(__dirname) + '/bower_components';
+const bowerModulesPath = path.dirname(__dirname) + '/node_modules/@bower_components';
 
-webpack([
+module.exports = [
   {
     entry: dashJsPath + 'src/cta.js',
     mode: "development",
@@ -31,6 +32,10 @@ webpack([
       filename: 'cta.bundle.js'
     },
     plugins: [
+      new HtmlWebpackPlugin({
+        template: dashJsPath + 'src/dashboard.ejs',
+        filename: dashJsPath + 'cta.html'
+      }),
       new VueLoaderPlugin()
     ],
     resolve: {
@@ -44,7 +49,7 @@ webpack([
     }
   },
   {
-    entry: dashJsPath + 'src/obs-connection.js',
+    entry: dashJsPath + 'src/donations.js',
     mode: "development",
     module: {
       rules: [
@@ -63,9 +68,13 @@ webpack([
     },
     output: {
       path: dashJsPath + 'dist',
-      filename: 'obs-connection.bundle.js'
+      filename: 'donations.bundle.js'
     },
     plugins: [
+      new HtmlWebpackPlugin({
+        template: dashJsPath + 'src/dashboard.ejs',
+        filename: dashJsPath + 'donations.html'
+      }),
       new VueLoaderPlugin()
     ],
     resolve: {
@@ -79,7 +88,7 @@ webpack([
     }
   },
   {
-    entry: dashJsPath + 'src/music-player.js',
+    entry: dashJsPath + 'src/logo-selector.js',
     mode: "development",
     module: {
       rules: [
@@ -98,9 +107,13 @@ webpack([
     },
     output: {
       path: dashJsPath + 'dist',
-      filename: 'music-player.bundle.js'
+      filename: 'logo-selector.bundle.js'
     },
     plugins: [
+      new HtmlWebpackPlugin({
+        template: dashJsPath + 'src/dashboard.ejs',
+        filename: dashJsPath + 'logo-selector.html'
+      }),
       new VueLoaderPlugin()
     ],
     resolve: {
@@ -113,6 +126,84 @@ webpack([
       modules: [ nodeModulesPath, bowerModulesPath ]
     }
   },
+  // {
+  //   entry: dashJsPath + 'src/obs-connection.js',
+  //   mode: "development",
+  //   module: {
+  //     rules: [
+  //       {
+  //         test: /\.css$/,
+  //         use: [
+  //           'vue-style-loader',
+  //           'css-loader'
+  //         ]
+  //       },
+  //       {
+  //         test: /\.vue$/,
+  //         loader: 'vue-loader'
+  //       }
+  //     ]
+  //   },
+  //   output: {
+  //     path: dashJsPath + 'dist',
+  //     filename: 'obs-connection.bundle.js'
+  //   },
+  //   plugins: [
+  //     new HtmlWebpackPlugin({
+  //       template: dashJsPath + 'src/dashboard.ejs',
+  //       filename: dashJsPath + 'obs-connection.html'
+  //     }),
+  //     new VueLoaderPlugin()
+  //   ],
+  //   resolve: {
+  //     extensions: ['.js', '.vue', '.json'],
+  //     alias: {
+  //       'vue$': 'vue/dist/vue.esm.js'
+  //     }
+  //   },
+  //   resolveLoader: {
+  //     modules: [ nodeModulesPath, bowerModulesPath ]
+  //   }
+  // },
+  // {
+  //   entry: dashJsPath + 'src/music-player.js',
+  //   mode: "development",
+  //   module: {
+  //     rules: [
+  //       {
+  //         test: /\.css$/,
+  //         use: [
+  //           'vue-style-loader',
+  //           'css-loader'
+  //         ]
+  //       },
+  //       {
+  //         test: /\.vue$/,
+  //         loader: 'vue-loader'
+  //       }
+  //     ]
+  //   },
+  //   output: {
+  //     path: dashJsPath + 'dist',
+  //     filename: 'music-player.bundle.js'
+  //   },
+  //   plugins: [
+  //     new HtmlWebpackPlugin({
+  //       template: dashJsPath + 'src/dashboard.ejs',
+  //       filename: dashJsPath + 'music-player.html'
+  //     }),
+  //     new VueLoaderPlugin()
+  //   ],
+  //   resolve: {
+  //     extensions: ['.js', '.vue', '.json'],
+  //     alias: {
+  //       'vue$': 'vue/dist/vue.esm.js'
+  //     }
+  //   },
+  //   resolveLoader: {
+  //     modules: [ nodeModulesPath, bowerModulesPath ]
+  //   }
+  // },
   {
     entry: dashJsPath + 'src/schedule.js',
     mode: "development",
@@ -136,6 +227,10 @@ webpack([
       filename: 'schedule.bundle.js'
     },
     plugins: [
+      new HtmlWebpackPlugin({
+        template: dashJsPath + 'src/dashboard.ejs',
+        filename: dashJsPath + 'schedule.html'
+      }),
       new VueLoaderPlugin()
     ],
     resolve: {
@@ -148,49 +243,47 @@ webpack([
       modules: [ nodeModulesPath, bowerModulesPath ]
     }
   },
-  {
-    entry: dashJsPath + 'src/streamers.js',
-    mode: "development",
-    module: {
-      rules: [
-        {
-          test: /\.css$/,
-          use: [
-            'vue-style-loader',
-            'css-loader'
-          ]
-        },
-        {
-          test: /\.vue$/,
-          loader: 'vue-loader'
-        },
-        {
-          test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-          loader: 'url-loader?limit=100000'
-        }
-      ]
-    },
-    output: {
-      path: dashJsPath + 'dist',
-      filename: 'streamers.bundle.js'
-    },
-    plugins: [
-      new VueLoaderPlugin()
-    ],
-    resolve: {
-      extensions: ['.js', '.vue', '.json'],
-      alias: {
-        'vue$': 'vue/dist/vue.esm.js'
-      }
-    },
-    resolveLoader: {
-      modules: [ nodeModulesPath, bowerModulesPath ]
-    }
-  }
-], (err, stats) => {
-  if (err || stats.hasErrors()) {
-    nodecg.log.error(stats);
-    return
-  }
-  nodecg.log.debug(stats);
-});
+  // {
+  //   entry: dashJsPath + 'src/streamers.js',
+  //   mode: "development",
+  //   module: {
+  //     rules: [
+  //       {
+  //         test: /\.css$/,
+  //         use: [
+  //           'vue-style-loader',
+  //           'css-loader'
+  //         ]
+  //       },
+  //       {
+  //         test: /\.vue$/,
+  //         loader: 'vue-loader'
+  //       },
+  //       {
+  //         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+  //         loader: 'url-loader?limit=100000'
+  //       }
+  //     ]
+  //   },
+  //   output: {
+  //     path: dashJsPath + 'dist',
+  //     filename: 'streamers.bundle.js'
+  //   },
+  //   plugins: [
+  //     new HtmlWebpackPlugin({
+  //       template: dashJsPath + 'src/dashboard.ejs',
+  //       filename: dashJsPath + 'streamers.html'
+  //     }),
+  //     new VueLoaderPlugin()
+  //   ],
+  //   resolve: {
+  //     extensions: ['.js', '.vue', '.json'],
+  //     alias: {
+  //       'vue$': 'vue/dist/vue.esm.js'
+  //     }
+  //   },
+  //   resolveLoader: {
+  //     modules: [ nodeModulesPath, bowerModulesPath ]
+  //   }
+  // }
+];

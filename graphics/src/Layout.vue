@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { TweenMax, TimelineLite } from 'gsap/TweenMax'
 import LayoutStreamer from './components/LayoutStreamer.vue'
 
 export default {

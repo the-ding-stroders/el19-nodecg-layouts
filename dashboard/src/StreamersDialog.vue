@@ -1,11 +1,13 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="500px">
-    <v-btn v-if="hasIcon" slot="activator" color="primary" dark icon>
-      <slot name="btnIcon"></slot>
-    </v-btn>
-    <v-btn v-else slot="activator" color="primary" dark>
-      Add New Streamer
-    </v-btn>
+    <template v-slot:activator="{ on }">
+      <v-btn v-if="hasIcon" v-on="on" slot="activator" color="primary" dark icon>
+        <slot name="btnIcon"></slot>
+      </v-btn>
+      <v-btn v-else v-on="on" slot="activator" color="primary" dark>
+        Add New Streamer
+      </v-btn>
+    </template>
     <v-card>
       <v-card-title>
         <span class="headline" v-if="streamerExists">Update {{ streamer.name }}</span>
@@ -55,7 +57,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" flat @click.native="dialog = false">Cancel</v-btn>
+        <v-btn color="blue darken-1" text @click.native="dialog = false">Cancel</v-btn>
         <v-btn color="success darken-1" @click="saveStreamer()">Save</v-btn>
       </v-card-actions>
     </v-card>
@@ -87,7 +89,7 @@ export default {
     saveStreamer: function() {
       const vm = this;
 
-      const streamerRep = nodecg.Replicant('tds:streamers');
+      const streamerRep = nodecg.Replicant('streamers', 'tds-2020-layouts');
       streamerRep.value[vm.streamer.name] = vm.streamerLocal;
       nodecg.sendMessage('streamerUpdated', vm.streamerLocal)
 

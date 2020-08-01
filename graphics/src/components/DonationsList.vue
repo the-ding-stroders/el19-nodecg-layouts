@@ -1,6 +1,6 @@
 <template>
   <div id="donation-list">
-    <div class="donation-list-label">Big Spenders:</div>
+    <div class="donation-list-label">Recent Donations:</div>
     <DonationsListItem
       v-for="donation in donations"
       :key="donation.id"
@@ -10,37 +10,29 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import DonationsListItem from './DonationsListItem.vue';
 
 export default {
   components: {
     DonationsListItem
   },
-  data() {
-    return {
-      donations: []
-    }
+  computed: {
+      donations () {
+          return this.$store.state.donations
+      }
   },
   methods: {
-    getTopDonations: function() {
-      const vm = this;
-      fetch('http://192.168.1.127:8000/donations/top')
-        .then(r => r.json())
-        .then(data => {
-          vm.donations = data;
-        })
-        .catch(e => nodecg.log.info(e));
-    }
+      ...mapActions([
+          'updateDonations'
+      ])
   },
   mounted: function() {
     const vm = this;
-    let donationRep = nodecg.Replicant('donations');
-    vm.getTopDonations();
 
-    donationRep.on('change', () => {
-      setTimeout(function(){
-        vm.getTopDonations();
-      }, 3000);
+    const donationsRep = nodecg.Replicant('donations', 'nodecg-tiltify')
+    donationsRep.on('change', () => {
+        this.updateDonations()
     })
   }
 }
@@ -50,14 +42,17 @@ export default {
 #donation-list {
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   position: relative;
+  line-height: 72px;
+  height: 100%;
+  margin-top: 4px;
+  z-index: 10;
 }
 #donation-list .donation-list-label {
   display: inline-block;
-  position: absolute;
   left: 32px;
-  line-height: 28px;
   font-size: 26px;
+  width: 180px;
 }
 </style>

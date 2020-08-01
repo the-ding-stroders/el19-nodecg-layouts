@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import { TweenMax, TimelineLite } from 'gsap/TweenMax'
 import { eachSeries } from 'async-es'
+import { gsap } from 'gsap'
 
 export default {
   name: 'LowerMessages',
@@ -24,8 +24,8 @@ export default {
       labelVisible: false,
       ctaMessages: [],
       schedule: {
-        'current': 'Current',
-        'next': 'Next'
+        'current': ' ',
+        'next': ' '
       },
       scrollHoldDuration: 5
     }
@@ -35,8 +35,15 @@ export default {
   },
   mounted() {
     const vm = this;
+    const ctaRep = nodecg.Replicant('ctamessages')
+    const schedRep = nodecg.Replicant('schedule')
+    const schedTakeRep = nodecg.Replicant('schedTake')
     vm.$data.scrollHoldDuration = nodecg.bundleConfig.omnibar.scrollHoldDuration;
-    vm.runTimeline();
+    
+    // Wait for replicants to load, then start the schedule rotation
+    NodeCG.waitForReplicants(ctaRep, schedRep, schedTakeRep).then(() => {
+      vm.runTimeline();
+    })
   },
   methods: {
     visibilityChanged (isVisible, entry) {
@@ -46,25 +53,25 @@ export default {
       tl.to({}, 0.03, {});
       tl.to('.content', 0.5, {
         opacity: 0,
-        ease: Linear.ease
+        ease: "linear"
       })
       return tl;
     },
     hideLabel: function(tl) {
-      const hideLabel = new TimelineLite();
+      const hideLabel = gsap.timeline();
 
       tl.to({}, 0.03, {});
       tl.to('.label', 0.3, {
         autoAlpha: 0,
         display: "none",
-        ease: Linear.ease
+        ease: "linear"
       })
       return tl;
     },
     populateMessages: function() {
       const vm = this;
 
-      let ctaRep = nodecg.readReplicant('tds:ctamessages', ctas => {
+      let ctaRep = nodecg.readReplicant('ctamessages', 'tds-2020-layouts', ctas => {
         vm.$data.ctaMessages = [];
         eachSeries(ctas, (cta, callback) => {
           if (cta.active === true) {
@@ -80,25 +87,21 @@ export default {
     populateSchedule: function() {
       const vm = this;
 
-      nodecg.readReplicant('tds:schedule', schedule => {
-        nodecg.readReplicant('tds:schedTake', schedIndexes => {
+      nodecg.readReplicant('schedule', 'tds-2020-layouts', schedule => {
+        nodecg.readReplicant('schedTake', 'tds-2020-layouts', schedIndexes => {
           const schedCurrent = schedule[schedIndexes.current];
           const schedNext = schedule[schedIndexes.next];
 
-          if (schedCurrent.type === 'game') {
-            vm.schedule.current = schedCurrent.gameName;
-          } else if (schedCurrent.type === 'other') {
-            vm.schedule.current = schedCurrent.otherName;
+          if (schedCurrent.customTitle) {
+            vm.schedule.current = `${schedCurrent.customTitle} (${schedCurrent.category.name})`;
           } else {
-            vm.schedule.current = schedCurrent.type;
+            vm.schedule.current = schedCurrent.category.name;
           }
 
-          if (schedNext.type === 'game') {
-            vm.schedule.next = schedNext.gameName;
-          } else if (schedNext.type === 'other') {
-            vm.schedule.next = schedNext.otherName;
+          if (schedNext.customTitle) {
+            vm.schedule.next = `${schedNext.customTitle} (${schedNext.category.name})`;
           } else {
-            vm.schedule.next = schedNext.type;
+            vm.schedule.next = schedNext.category.name;
           }
           return;
         });
@@ -151,7 +154,7 @@ export default {
       tl.to({}, 0.03, {});
       tl.to('.content', 0.5, {
         opacity: 1,
-        ease: Linear.ease
+        ease: "linear"
       })
       tl.to({}, scrollHoldDuration, {});
 
@@ -159,7 +162,7 @@ export default {
     },
     showCTA: function(message) {
       const vm = this;
-      const tl = new TimelineLite();
+      const tl = gsap.timeline();
       const messages = vm.ctaMessages;
 
       vm.hideLabel(tl);
@@ -172,38 +175,37 @@ export default {
     },
     showCurrent: function() {
       const vm = this;
-      const tl = new TimelineLite();
+      const tl = gsap.timeline();
 
       vm.setContent(tl, vm.schedule.current);
-      vm.showLabel('Now?');
+      vm.showLabel("Right Now:");
       vm.showContent(tl);
       vm.hideContent(tl);
 
       return tl;
     },
-    showLabel: function(text, color='#6441A4') {
+    showLabel: function(text, color='#E8FF51') {
       const vm = this;
-      const showLabel = new TimelineLite();
+      const showLabel = gsap.timeline();
       const scrollHoldDuration = vm.$data.scrollHoldDuration;
 
       vm.$data.message.label = text;
 
       showLabel.to({}, 0.03, {});
       showLabel.to('.label', 0.5, {
-        backgroundColor: color,
         autoAlpha: 1,
         display: "inline-block",
-        ease: Linear.ease
+        ease: "linear"
       });
       showLabel.to({}, scrollHoldDuration, {});
       return showLabel;
     },
     showUpNext: function() {
       const vm = this;
-      const tl = new TimelineLite();
+      const tl = gsap.timeline();
 
       vm.setContent(tl, vm.schedule.next);
-      vm.showLabel('Next!', '#463f1a');
+      vm.showLabel('Up Next:', '#E8FF51');
       vm.showContent(tl);
       vm.hideContent(tl);
       return tl;
@@ -218,12 +220,33 @@ div, /deep/ div {
   height: 100%;
 }
 .label, /deep/ .label {
-  background-color: #6441A4;
-  margin: 0px 0 0 -24px;
-  padding: 0 10px 0 24px;
+  /* background-color: #E8FF51; */
+  /* margin: 0px 0 0 -24px; */
+  padding: 0 10px 0 12px;
   opacity: 0;
+  width: 172px;
+  text-align: center;
+  text-transform: uppercase;
 }
 .content {
   opacity: 0;
+  padding-left: 30px;
+}
+.lower-messages {
+  z-index: 2;
+  position: relative;
+  width: 100%;
+}
+.lower-messages::before {
+  background: #939598;
+  width: 1080px;
+  content: "";
+  top: 0;
+  bottom: 0;
+  left: 218px;
+  position: absolute;
+  z-index: -1;
+  transform: skewX(195deg);
+  transform-origin: bottom;
 }
 </style>

@@ -1,8 +1,13 @@
 <template>
   <div id="app">
-    <v-app dark>
+    <v-app>
       <v-container grid-list-md text-xs-center>
-        <v-form ref="form">
+        <v-form
+          ref="form"
+          @submit.prevent
+          @submit="submit"
+          onSubmit="return false;"
+        >
           <v-layout row wrap>
             <v-flex xs12>
               <v-text-field
@@ -31,7 +36,7 @@
             <v-data-table
               :headers="headers"
               :items="ctaMessages"
-              hide-actions
+              hide-default-footer
               class="elevation-1"
             >
               <template slot="items" slot-scope="props">
@@ -80,7 +85,8 @@ export default {
   }),
   mounted: function() {
     const vm = this;
-    let ctaRep = nodecg.readReplicant('tds:ctamessages', value => {
+    nodecg.Replicant('ctamessages', 'tds-2020-layouts', { defaultValue: [] });
+    const ctaRep = nodecg.readReplicant('ctamessages', 'tds-2020-layouts', value => {
       vm.$data.ctaMessages = value;
     });
   },
@@ -112,7 +118,7 @@ export default {
   },
   watch: {
     ctaMessages: function (newCtaMessage) {
-      const ctaRep = nodecg.Replicant('tds:ctamessages');
+      const ctaRep = nodecg.Replicant('ctamessages', 'tds-2020-layouts', { defaultValue: [] });
       ctaRep.value = newCtaMessage;
     }
   }

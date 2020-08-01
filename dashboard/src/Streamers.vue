@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app dark>
+    <v-app>
       <v-container grid-list-md text-xs-center>
         <v-layout row wrap>
           <StreamersCard
