@@ -19,8 +19,9 @@
       </div>
       <div class="total lt-container">
         <div class="total-amount">
-          <span class="dolla-dolla-signz">$</span><IOdometer
+          <span class="dolla-dolla-signz" style="color: #414042;">$</span><IOdometer
               :value="donationAmount" format="(,ddd).DD" />
+          <span class="dolla-dolla-signz">/ $3000</span>
         </div>
       </div>
     </div>
