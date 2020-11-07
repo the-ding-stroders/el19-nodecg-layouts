@@ -19,9 +19,12 @@ export default {
   },
   computed: {
       donations () {
-          return this.$store.state.donations
+          return this.donationsLimit ? this.$store.state.donations.slice(0,this.donationsLimit) : this.$store.state.donations
       }
   },
+  data: () => ({
+    donationsLimit: 6
+  }),
   methods: {
       ...mapActions([
           'updateDonations'

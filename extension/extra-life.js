@@ -12,9 +12,9 @@ const donationRep = nodecg.Replicant(
   }
 );
 
-donationRep.on('change', (newValue, oldValue) => {
-  console.log(JSON.stringify(newValue));
-})
+// donationRep.on('change', (newValue, oldValue) => {
+//   console.log(JSON.stringify(newValue));
+// })
 
 function checkForDonations() {
   extraLife.getTeamDonations(TEAM_ID, 10).then(donations => {

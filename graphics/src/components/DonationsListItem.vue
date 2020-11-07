@@ -27,15 +27,18 @@ export default {
   width: 200px;
   letter-spacing: 1px;
   display: flex;
-  /* height: 30px; */
-  /* line-height: 30px; */
+  height: 76px;
+  line-height: 76px;
   margin: 0 10px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 .donation div {
   display: inline-block;
 }
 .donation span {
-    margin: 0 auto;
+    line-height: normal;
 }
 .donation .amount {
   color: #eee;

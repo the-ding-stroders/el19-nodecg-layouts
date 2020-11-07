@@ -21,7 +21,7 @@ export default {
                 currentCharitiesRep.on('change', (newValue, oldValue) => {
                     this.currentCharities = newValue;
                     // if there are now multiple logos, start rotation
-                    if (newValue.length >=2 ) {
+                    if (newValue.length >=1 ) {
                         this.displayLogos()
                     }
                 })
