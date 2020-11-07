@@ -18,9 +18,9 @@ const store = new Vuex.Store({
   },
   actions: {
     updateDonations (context) {
-      const donationsRep = nodecg.Replicant('donations', 'nodecg-tiltify')
+      const donationsRep = nodecg.Replicant('donations')
       NodeCG.waitForReplicants(donationsRep).then(() => {
-        nodecg.readReplicant('donations', 'nodecg-tiltify', donationsVal => {
+        nodecg.readReplicant('donations', donationsVal => {
           context.commit('updateDonations', donationsVal)
         })
       })

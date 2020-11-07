@@ -20,6 +20,7 @@ module.exports = function(nodecg) {
     // require('./obs');
     // require('./discord');
     // require('./donations');
+    require('./extra-life');
     require('./twitch');
     require('./music');
 }

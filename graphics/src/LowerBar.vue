@@ -20,7 +20,7 @@
       <div class="total lt-container">
         <div class="total-amount">
           <span class="dolla-dolla-signz">$</span><IOdometer
-             :value="donationAmount" format="(,ddd).DD" />
+              :value="donationAmount" format="(,ddd).DD" />
         </div>
       </div>
     </div>
@@ -52,9 +52,9 @@ export default {
   }),
   mounted() {
     const vm = this;
-    const totalRep = nodecg.Replicant('total', 'nodecg-tiltify');
+    const totalRep = nodecg.Replicant('total');
 
-    nodecg.readReplicant('total', 'nodecg-tiltify', value => {
+    nodecg.readReplicant('total', value => {
       vm.donationAmount = value;
     });
 

@@ -1,6 +1,7 @@
 <template>
-  <div class="donation" :class="'id-' + donation.id">
-    <span>${{ donation.amount }} - {{ donation.name }}</span>
+  <div class="donation" :class="'id-' + donation.donationID">
+    <span v-if="donation.displayName">${{ donation.amount }} - {{ donation.displayName }}</span>
+    <span v-else>${{ donation.amount }} - Anonymous</span>
   </div>
 </template>
 
@@ -13,7 +14,7 @@ export default {
     }
   },
   mounted: function() {
-    jQuery(".id-" + this.donation.id).textfill({
+    jQuery(".id-" + this.donation.donationID).textfill({
       allowOverflow: true,
       maxFontPixels: 24
     });

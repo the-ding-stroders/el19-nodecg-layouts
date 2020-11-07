@@ -3,7 +3,7 @@
     <div class="donation-list-label">Recent Donations:</div>
     <DonationsListItem
       v-for="donation in donations"
-      :key="donation.id"
+      :key="donation.donationID"
       :donation="donation"
     />
   </div>
@@ -30,7 +30,7 @@ export default {
   mounted: function() {
     const vm = this;
 
-    const donationsRep = nodecg.Replicant('donations', 'nodecg-tiltify')
+    const donationsRep = nodecg.Replicant('donations')
     donationsRep.on('change', () => {
         this.updateDonations()
     })

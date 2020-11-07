@@ -31,8 +31,7 @@
   "nodecg": {
     "compatibleRange": "^1.6.0",
     "bundleDependencies": {
-      "lfg-twitchapi": "^2.0.0",
-      "nodecg-tiltify": "^1.0.0"
+      "lfg-twitchapi": "^2.0.0"
     },
     "dashboardPanels": [
       {
@@ -40,13 +39,6 @@
         "title": "Music Player",
         "width": 3,
         "file": "music-player.html",
-        "workspace": "Overview"
-      },
-      {
-        "name": "donations",
-        "title": "Donations",
-        "width": 5,
-        "file": "donations.html",
         "workspace": "Overview"
       },
       {
@@ -155,5 +147,8 @@
   },
   "engines": {
     "yarn": ">= 1.0.0"
+  },
+  "dependencies": {
+    "extra-life": "^1.0.5"
   }
 }
