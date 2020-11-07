@@ -23,6 +23,7 @@ function checkForDonations() {
       donationRep.value = donations.records;
       extraLife.getTeam(TEAM_ID).then(teamInfo => {
         totalRep.value = teamInfo.sumDonations;
+        nodecg.sendMessage('donation');
       })
     }
   })

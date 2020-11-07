@@ -59,7 +59,9 @@ export default {
     });
 
     nodecg.listenFor('donation', () => {
-      vm.donationAmount = totalRep.value;
+      nodecg.readReplicant('total', value => {
+        vm.donationAmount = value;
+      });
     })
   }
 }
