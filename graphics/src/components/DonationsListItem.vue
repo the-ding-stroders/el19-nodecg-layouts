@@ -1,7 +1,7 @@
 <template>
   <div class="donation" :class="'id-' + donation.donationID">
-    <span v-if="donation.displayName">${{ donation.amount }} - {{ donation.displayName }}</span>
-    <span v-else>${{ donation.amount }} - Anonymous</span>
+    <span v-if="donation.displayName">{{ donation.amount | toCurrency }} - {{ donation.displayName }}</span>
+    <span v-else>{{ donation.amount | toCurrency }} - Anonymous</span>
   </div>
 </template>
 
