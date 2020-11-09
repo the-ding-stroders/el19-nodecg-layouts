@@ -10,31 +10,30 @@
 </template>
 
 <script>
-import DiscordChannelMember from './DiscordChannelMember.vue'
+import DiscordChannelMember from './DiscordChannelMember.vue';
 
 export default {
   components: {
-    DiscordChannelMember
+    DiscordChannelMember,
   },
   data() {
     return {
-      members: {}
-    }
+      members: {},
+    };
   },
-  created: function() {
-    jQuery(".discord-member").fitText(); // remove when done testing
+  created() {
+    jQuery('.discord-member').fitText(); // remove when done testing
   },
-  mounted: function() {
-    jQuery(".discord-member").fitText(); // remove when done testing
-    var voiceRoster = nodecg.Replicant('tds:voiceRoster');
+  mounted() {
+    jQuery('.discord-member').fitText(); // remove when done testing
+    const voiceRoster = nodecg.Replicant('tds:voiceRoster');
     voiceRoster.on('change', (newValue) => {
       newValue = JSON.stringify(newValue);
       newValue = JSON.parse(newValue);
       this.members = newValue;
-      return
-    })
-  }
-}
+    });
+  },
+};
 </script>
 
 <style>

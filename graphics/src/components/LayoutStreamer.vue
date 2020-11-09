@@ -4,20 +4,37 @@
     :xs6="size === 6"
     class="mb-4"
   >
-    <v-layout row wrap>
-      <v-flex xs12 class="pa-1">
+    <v-layout
+      row
+      wrap
+    >
+      <v-flex
+        xs12
+        class="pa-1"
+      >
         <v-responsive
           :aspect-ratio="16/9"
           class="video-border"
           :max-width="maxWidth"
-        ></v-responsive>
+        />
       </v-flex>
-      <v-flex xs6 class="pl-2 pt-0">
+      <v-flex
+        xs6
+        class="pl-2 pt-0"
+      >
         <v-layout row>
-          <v-flex xs1 class="nametag-icon elevation-2">
-            <v-icon text-xs-center>{{ tagIcon }}</v-icon>
+          <v-flex
+            xs1
+            class="nametag-icon elevation-2"
+          >
+            <v-icon text-xs-center>
+              {{ tagIcon }}
+            </v-icon>
           </v-flex>
-          <v-flex xs5 class="nametag-text">
+          <v-flex
+            xs5
+            class="nametag-text"
+          >
             {{ tagText }}
           </v-flex>
         </v-layout>
@@ -32,26 +49,26 @@ export default {
   props: {
     size: {
       type: Number,
-      required: true
+      required: true,
     },
     streamer: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  data () {
+  data() {
     return {
       maxWidth: null,
       parts: [],
       tagIcon: '',
       tagText: '',
-      scrollHoldDuration: 5
-    }
+      scrollHoldDuration: 5,
+    };
   },
   mounted() {
     const vm = this;
 
-    switch(vm.size) {
+    switch (vm.size) {
       case 6:
         vm.maxWidth = 770;
         break;
@@ -66,14 +83,14 @@ export default {
     vm.runTimeline();
   },
   methods: {
-    processNextPart: function() {
+    processNextPart() {
       const vm = this;
 
       if (vm.parts.length > 0) {
         const part = vm.parts.shift().bind(vm);
         vm.promisifyTimeline(part())
           .then(vm.processNextPart)
-          .catch(error => {
+          .catch((error) => {
             nodecg.log.error('Error when running main loop:', error);
           });
       } else {
@@ -81,16 +98,16 @@ export default {
         vm.runTimeline();
       }
     },
-    promisifyTimeline: function(tl) {
-      return new Promise(resolve => {
+    promisifyTimeline(tl) {
+      return new Promise((resolve) => {
         tl.call(resolve, null, null, '+=0.03');
       });
     },
     runTimeline() {
       const vm = this;
-      let parts = [
-        vm.showName
-      ]
+      const parts = [
+        vm.showName,
+      ];
 
       if (vm.streamer.twitter) {
         parts.push(vm.showTwitter);
@@ -103,7 +120,7 @@ export default {
 
       vm.processNextPart();
     },
-    setContent: function(tl, content) {
+    setContent(tl, content) {
       const vm = this;
 
       tl.to({}, 0.03, {});
@@ -116,13 +133,13 @@ export default {
     },
     showName() {
       const vm = this;
-      const scrollHoldDuration = vm.scrollHoldDuration;
+      const { scrollHoldDuration } = vm;
       const tl = new TimelineLite();
 
       tl.to({}, 0.03, {});
       vm.setContent(tl, {
         icon: 'far fa-id-card',
-        text: vm.streamer.name
+        text: vm.streamer.name,
       });
       tl.to({}, scrollHoldDuration, {});
 
@@ -130,13 +147,13 @@ export default {
     },
     showTwitter() {
       const vm = this;
-      const scrollHoldDuration = vm.scrollHoldDuration;
+      const { scrollHoldDuration } = vm;
       const tl = new TimelineLite();
 
       tl.to({}, 0.03, {});
       vm.setContent(tl, {
         icon: 'fab fa-twitter',
-        text: vm.streamer.twitter
+        text: vm.streamer.twitter,
       });
       tl.to({}, scrollHoldDuration, {});
 
@@ -144,18 +161,18 @@ export default {
     },
     showTwitch() {
       const vm = this;
-      const scrollHoldDuration = vm.scrollHoldDuration;
+      const { scrollHoldDuration } = vm;
       const tl = new TimelineLite();
 
       tl.to({}, 0.03, {});
       vm.setContent(tl, {
         icon: 'fab fa-twitch',
-        text: vm.streamer.twitch
+        text: vm.streamer.twitch,
       });
       tl.to({}, scrollHoldDuration, {});
 
       return tl;
-    }
-  }
-}
+    },
+  },
+};
 </script>

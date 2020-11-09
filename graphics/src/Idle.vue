@@ -1,103 +1,109 @@
 <template>
   <div id="app">
-    <div class="text-circle"></div>
+    <div class="text-circle" />
     <div class="logo-outer">
       <div class="logo-inner">
-        <TDSLogo/>
+        <TDSLogo />
       </div>
     </div>
     <div class="charity-outer">
       <div class="charity-inner">
-        <CharityLogos/>
+        <CharityLogos />
       </div>
     </div>
     <div class="heart-outer">
       <div class="heart-inner">
-        <img src="imgs/heart.png" />
+        <img src="imgs/heart.png">
       </div>
     </div>
     <div class="lines-for-days">
       <div class="row row-1 yellow">
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small" style="margin-right: 475px;"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div
+          class="bar size-small"
+          style="margin-right: 475px;"
+        />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
       </div>
       <div class="row row-2 gray">
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-large"></div>
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
+        <div class="bar size-large" />
       </div>
       <div class="row row-3 yellow">
-        <div class="bar size-medium"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-medium short"></div>
-        <div class="bar size-medium short"></div>
-        <div class="bar size-medium short"></div>
+        <div class="bar size-medium" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-medium" />
+        <div class="bar size-small" />
+        <div class="bar size-medium short" />
+        <div class="bar size-medium short" />
+        <div class="bar size-medium short" />
       </div>
       <div class="row row-4 gray">
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
       </div>
       <div class="row row-5 yellow">
-        <div class="bar size-medium"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-medium"></div>
+        <div class="bar size-medium" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-medium" />
       </div>
       <div class="row row-6 gray">
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
       </div>
       <div class="row row-7 yellow">
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
       </div>
       <div class="row row-8 gray">
-        <div class="bar size-large"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-medium"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small" style="margin-right: 156px;"></div>
-        <div class="bar size-small"></div>
-        <div class="bar size-small"></div>
+        <div class="bar size-large" />
+        <div class="bar size-medium" />
+        <div class="bar size-medium" />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
+        <div
+          class="bar size-small"
+          style="margin-right: 156px;"
+        />
+        <div class="bar size-small" />
+        <div class="bar size-small" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import CharityLogos from './components/CharityLogos.vue'
-import TDSLogo from './components/TDSLogo.vue'
+import CharityLogos from './components/CharityLogos.vue';
+import TDSLogo from './components/TDSLogo.vue';
 
 export default {
-    name: 'app',
-    components: {
-      CharityLogos,
-      TDSLogo
-    }
-}
+  name: 'App',
+  components: {
+    CharityLogos,
+    TDSLogo,
+  },
+};
 </script>
 
 <style>
@@ -131,7 +137,7 @@ export default {
 .row-1 {
   margin-left: -80px;
 }
-.row-2 { 
+.row-2 {
   grid-row-start: 3;
   padding-left: 215px;
 }

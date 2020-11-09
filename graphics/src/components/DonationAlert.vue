@@ -7,12 +7,12 @@
     </div>
     <div class="slash-bot-wrapper">
       <div class="slash-bot-animate">
-        <div class="slash-bot"></div>
+        <div class="slash-bot" />
       </div>
     </div>
     <div class="slash-top-wrapper">
       <div class="slash-top-animate">
-        <div class="slash-top"></div>
+        <div class="slash-top" />
       </div>
     </div>
   </div>
@@ -21,58 +21,57 @@
 <script>
 export default {
   name: 'DonationAlert',
-  data () {
+  data() {
     return {
-      donation: {}
-    }
+      donation: {},
+    };
   },
   mounted() {
     const vm = this;
-    let donationRep = nodecg.Replicant('donations');
+    const donationRep = nodecg.Replicant('donations');
     nodecg.listenFor('donation', () => {
       vm.donation = donationRep.value;
       vm.showNewDonation();
-      setTimeout(function(){
+      setTimeout(() => {
         vm.hideNewDonation();
       }, 5000);
-    })
+    });
   },
   methods: {
-    showNewDonation: function() {
+    showNewDonation() {
       const vm = this;
       vm.$anime.timeline()
         .add({
           targets: '.slash-bot-animate',
           skewX: {
-            value: -25, delay: 0, duration: 50
+            value: -25, delay: 0, duration: 50,
           },
           scaleX: {
-            value: 170, delay: 50, elasticity: 0, duration: 500, easing: 'easeInExpo'
+            value: 170, delay: 50, elasticity: 0, duration: 500, easing: 'easeInExpo',
           },
-          offset: 0
+          offset: 0,
         })
         .add({
           targets: '.slash-top-animate',
           skewX: {
-            value: -25, delay: 0, duration: 50
+            value: -25, delay: 0, duration: 50,
           },
           scaleX: {
-            value: 170, delay: 50, elasticity: 0, duration: 500, easing: 'easeInCubic'
+            value: 170, delay: 50, elasticity: 0, duration: 500, easing: 'easeInCubic',
           },
-          offset: 250
+          offset: 250,
         })
         .add({
           targets: '.new-donation-text',
           opacity: {
             value: 1,
             easing: 'linear',
-            duration: 250
+            duration: 250,
           },
-          offset: 750
+          offset: 750,
         });
-      return;
     },
-    hideNewDonation: function() {
+    hideNewDonation() {
       const vm = this;
       vm.$anime.timeline()
         .add({
@@ -80,34 +79,33 @@ export default {
           opacity: {
             value: 0,
             easing: 'linear',
-            duration: 250
+            duration: 250,
           },
-          offset: 0
+          offset: 0,
         })
         .add({
           targets: '.slash-top-animate',
           skewX: {
-            value: -25, delay: 0, duration: 50
+            value: -25, delay: 0, duration: 50,
           },
           scaleX: {
-            value: 0, delay: 50, elasticity: 0, duration: 500, easing: 'easeInExpo'
+            value: 0, delay: 50, elasticity: 0, duration: 500, easing: 'easeInExpo',
           },
-          offset: 250
+          offset: 250,
         })
         .add({
           targets: '.slash-bot-animate',
           skewX: {
-            value: -25, delay: 0, duration: 50
+            value: -25, delay: 0, duration: 50,
           },
           scaleX: {
-            value: 0, delay: 50, elasticity: 0, duration: 500, easing: 'easeInCubic'
+            value: 0, delay: 50, elasticity: 0, duration: 500, easing: 'easeInCubic',
           },
-          offset: 500
+          offset: 500,
         });
-      return;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

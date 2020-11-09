@@ -1,13 +1,22 @@
 <template>
   <div id="app">
     <v-app>
-      <v-container grid-list-md class="mx-2 layout-container">
-        <v-layout row wrap align-center justify-center fill-height>
+      <v-container
+        grid-list-md
+        class="mx-2 layout-container"
+      >
+        <v-layout
+          row
+          wrap
+          align-center
+          justify-center
+          fill-height
+        >
           <LayoutStreamer
             v-for="streamer in streamers"
             :streamer="streamer"
             :size="size"
-          ></LayoutStreamer>
+          />
         </v-layout>
       </v-container>
     </v-app>
@@ -15,58 +24,58 @@
 </template>
 
 <script>
-import LayoutStreamer from './components/LayoutStreamer.vue'
+import LayoutStreamer from './components/LayoutStreamer.vue';
 
 export default {
   name: 'Layout',
   components: {
-    LayoutStreamer
+    LayoutStreamer,
   },
-  data () {
+  data() {
     return {
       layout: '',
       size: 6,
-      streamers: {}
-    }
+      streamers: {},
+    };
   },
   created() {
     const vm = this;
     const params = new URLSearchParams(location.search);
 
     vm.layout = params.get('layout');
-    if (vm.layout === "single") {
+    if (vm.layout === 'single') {
       vm.size = 12;
     }
     vm.getHash();
 
-    window.onhashchange = function() {
+    window.onhashchange = function () {
       vm.getHash();
-    }
+    };
   },
   methods: {
     getHash() {
       const vm = this;
-      let streamerParams = [
+      const streamerParams = [
         'streamer0',
         'streamer1',
         'streamer2',
         'streamer3',
       ];
 
-      let hash = location.hash;
+      let { hash } = location;
       // Remove the first character (i.e. the prepended "#").
       hash = hash.substring(1, hash.length);
 
       // This is where we will store our properties and values.
-      var hashObj = {};
+      const hashObj = {};
 
       // Get the streamer replicant for later use
-      const streamerRep = nodecg.readReplicant('tds:streamers', streamers => {
-        let BreakException = {};
+      const streamerRep = nodecg.readReplicant('tds:streamers', (streamers) => {
+        const BreakException = {};
 
         try {
           // Split on the delimiter "&" and for each key/val pair...
-          hash.split('&').forEach(function(q, index) {
+          hash.split('&').forEach((q, index) => {
             const hashSplit = q.split(/=/);
             // Get the property by splitting the entry
             const prop = hashSplit[0];
@@ -81,7 +90,7 @@ export default {
               }
             }
 
-            switch(vm.layout) {
+            switch (vm.layout) {
               case 'single':
                 if (index === 0) throw BreakException;
                 break;
@@ -95,11 +104,10 @@ export default {
         }
 
         vm.streamers = hashObj;
-        return;
       });
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>

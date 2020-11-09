@@ -3,24 +3,29 @@
     <div class="lower-third-grid">
       <div class="logo-outer lt-container">
         <div class="logo-inner">
-          <TDSLogo/>
+          <TDSLogo />
         </div>
       </div>
       <div class="donations lt-container">
-        <DonationAlert/>
-        <DonationsList/>
+        <DonationAlert />
+        <DonationsList />
       </div>
       <div class="charities lt-container">
         <CharityLogos />
         <div class="arrow-down" />
       </div>
       <div class="messages lt-container">
-        <LowerMessages/>
+        <LowerMessages />
       </div>
       <div class="total lt-container">
         <div class="total-amount">
-          <span class="dolla-dolla-signz" style="color: #414042;">$</span><IOdometer
-              :value="donationAmount" format="(,ddd).DD" />
+          <span
+            class="dolla-dolla-signz"
+            style="color: #414042;"
+          >$</span><IOdometer
+            :value="donationAmount"
+            format="(,ddd).DD"
+          />
           <span class="dolla-dolla-signz">/ {{ fundraisingGoal | toCurrency }}</span>
         </div>
       </div>
@@ -29,13 +34,13 @@
 </template>
 
 <script>
-import CharityLogos from './components/CharityLogos.vue'
-import DonationsList from './components/DonationsList.vue'
-import DonationAlert from './components/DonationAlert.vue'
-import LowerMessages from './components/LowerMessages.vue'
-import TDSLogo from './components/TDSLogo.vue'
-import Odometer from 'odometer/odometer.min.js'
+import Odometer from 'odometer/odometer.min.js';
 import IOdometer from 'vue-odometer';
+import CharityLogos from './components/CharityLogos.vue';
+import DonationsList from './components/DonationsList.vue';
+import DonationAlert from './components/DonationAlert.vue';
+import LowerMessages from './components/LowerMessages.vue';
+import TDSLogo from './components/TDSLogo.vue';
 import 'odometer/themes/odometer-theme-default.css';
 
 export default {
@@ -46,11 +51,11 @@ export default {
     DonationsList,
     IOdometer,
     LowerMessages,
-    TDSLogo
+    TDSLogo,
   },
   data: () => ({
     donationAmount: 0,
-    fundraisingGoal: 0
+    fundraisingGoal: 0,
   }),
   mounted() {
     const vm = this;
@@ -58,22 +63,22 @@ export default {
     const totalRep = nodecg.Replicant('total');
 
     fundGoalRep.on('change', (newValue) => {
-      nodecg.readReplicant('fundraisingGoal', value => {
+      nodecg.readReplicant('fundraisingGoal', (value) => {
         vm.fundraisingGoal = value;
       });
     });
 
-    nodecg.readReplicant('total', value => {
+    nodecg.readReplicant('total', (value) => {
       vm.donationAmount = value;
     });
 
     nodecg.listenFor('donation', () => {
-      nodecg.readReplicant('total', value => {
+      nodecg.readReplicant('total', (value) => {
         vm.donationAmount = value;
       });
-    })
-  }
-}
+    });
+  },
+};
 </script>
 
 <style>

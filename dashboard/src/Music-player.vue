@@ -1,35 +1,44 @@
 <template>
   <div id="app">
     <v-app>
-      <v-container grid-list-md text-xs-center>
-        <v-layout row wrap>
+      <v-container
+        grid-list-md
+        text-xs-center
+      >
+        <v-layout
+          row
+          wrap
+        >
           <v-flex xs12>
-            <div id="warningMsg">The controls in this panel shouldn't be needed unless necessary; music should pause/play automatically.</div>
-            <v-divider></v-divider>
-          	<div><b>Current Track: {{ currentTrack }}</b></div>
-          	<v-btn
+            <div id="warningMsg">
+              The controls in this panel shouldn't be needed unless necessary; music should
+              pause/play automatically.
+            </div>
+            <v-divider />
+            <div><b>Current Track: {{ currentTrack }}</b></div>
+            <v-btn
               v-if="!playing"
-              @click="pausePlaySong"
               color="primary"
+              @click="pausePlaySong"
             >
               <v-icon>mdi-play</v-icon> Play Music
             </v-btn>
-          	<v-btn
+            <v-btn
               v-else
-              @click="pausePlaySong"
               color="success"
+              @click="pausePlaySong"
             >
               <v-icon>mdi-pause</v-icon> Pause Music
             </v-btn>
-          	<v-btn
-              @click="skipSong"
+            <v-btn
               color="primary"
               :disabled="!playing"
               outlined
+              @click="skipSong"
             >
               <v-icon>mdi-skip-next</v-icon>
             </v-btn>
-            <v-divider></v-divider>
+            <v-divider />
             <v-slider
               v-model="volume"
               :disabled="!playing"
@@ -37,20 +46,20 @@
               prepend-icon="mdi-volume-minus"
               @click:append="volUp"
               @click:prepend="volDown"
-            ></v-slider>
+            />
             <v-btn
-              @click="setLevel('foreground')"
               color="success"
               :disabled="!playing"
               outlined
+              @click="setLevel('foreground')"
             >
               Set Foreground Level
             </v-btn>
             <v-btn
-              @click="setLevel('background')"
               color="success"
               :disabled="!playing"
               outlined
+              @click="setLevel('background')"
             >
               Set Background Level
             </v-btn>
@@ -63,33 +72,12 @@
 
 <script>
 export default {
-  name: 'app',
+  name: 'App',
   data: () => ({
     currentTrack: 'No Track Playing',
     playing: false,
-    volume: 100
+    volume: 100,
   }),
-  methods: {
-    pausePlaySong: function() {
-      nodecg.sendMessage('pausePlaySong');
-    },
-    setLevel: function(target) {
-      const data = {
-        target: target,
-        volume: this.volume
-      }
-      nodecg.sendMessage('setLevel', data);
-    },
-    skipSong: function() {
-      nodecg.sendMessage('skipSong');
-    },
-    volDown: function() {
-      this.volume = (this.volume - 10) || 0;
-    },
-    volUp: function() {
-      this.volume = (this.volume + 10) || 100;
-    }
-  },
   mounted() {
     const currentVolume = nodecg.Replicant('mpd:currentVolume');
     const songData = nodecg.Replicant('songData');
@@ -101,13 +89,34 @@ export default {
         vm.$data.playing = false;
       }
       vm.$data.currentTrack = newVal.title;
-    })
+    });
 
     currentVolume.on('change', (newVol) => {
       vm.volume = newVol;
-    })
-  }
-}
+    });
+  },
+  methods: {
+    pausePlaySong() {
+      nodecg.sendMessage('pausePlaySong');
+    },
+    setLevel(target) {
+      const data = {
+        target,
+        volume: this.volume,
+      };
+      nodecg.sendMessage('setLevel', data);
+    },
+    skipSong() {
+      nodecg.sendMessage('skipSong');
+    },
+    volDown() {
+      this.volume = (this.volume - 10) || 0;
+    },
+    volUp() {
+      this.volume = (this.volume + 10) || 100;
+    },
+  },
+};
 </script>
 
 <style>

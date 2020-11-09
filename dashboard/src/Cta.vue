@@ -1,37 +1,59 @@
 <template>
   <div id="app">
     <v-app>
-      <v-container grid-list-md text-xs-center>
+      <v-container
+        grid-list-md
+        text-xs-center
+      >
         <v-form
           ref="form"
+          on-submit="return false;"
           @submit.prevent
           @submit="submit"
-          onSubmit="return false;"
         >
-          <v-layout row wrap>
+          <v-layout
+            row
+            wrap
+          >
             <v-flex xs12>
               <v-text-field
                 v-model="newContent"
                 :counter="140"
                 label="Message"
                 required
-              ></v-text-field>
+              />
             </v-flex>
           </v-layout>
-          <v-layout row wrap>
+          <v-layout
+            row
+            wrap
+          >
             <v-flex xs6>
               <v-checkbox
-                label="Active"
                 v-model="newActive"
-              ></v-checkbox>
+                label="Active"
+              />
             </v-flex>
-            <v-flex xs6 align-content-end>
-              <v-btn @click="clearForm()">Clear</v-btn>
-              <v-btn color="success" @click="addMessage()">Add</v-btn>
+            <v-flex
+              xs6
+              align-content-end
+            >
+              <v-btn @click="clearForm()">
+                Clear
+              </v-btn>
+              <v-btn
+                color="success"
+                @click="addMessage()"
+              >
+                Add
+              </v-btn>
             </v-flex>
           </v-layout>
         </v-form>
-        <v-layout row wrap>
+        <v-layout
+          row
+          wrap
+        >
           <v-flex xs12>
             <v-data-table
               :headers="headers"
@@ -39,12 +61,12 @@
               hide-default-footer
               class="elevation-1"
             >
-              <template slot="items" slot-scope="props">
+              <template #items="props">
                 <td>{{ props.item.content }}</td>
                 <td>{{ props.item.active }}</td>
                 <td>{{ props.item.id }}</td>
               </template>
-              <template slot="no-data">
+              <template #no-data>
                 <v-alert
                   type="info"
                 >
@@ -61,41 +83,47 @@
 
 <script>
 export default {
-  name: 'app',
+  name: 'App',
   data: () => ({
     ctaMessages: [],
     headers: [
       {
         text: 'Message Content',
         sortable: false,
-        value: 'content'
+        value: 'content',
       },
       {
         text: 'Active?',
         sortable: false,
-        value: 'active'
+        value: 'active',
       },
       {
         text: 'ID (Time Created)',
-        value: 'id'
-      }
+        value: 'id',
+      },
     ],
     newActive: true,
-    newContent: ''
+    newContent: '',
   }),
-  mounted: function() {
+  watch: {
+    ctaMessages(newCtaMessage) {
+      const ctaRep = nodecg.Replicant('ctamessages', 'tds-2020-layouts', { defaultValue: [] });
+      ctaRep.value = newCtaMessage;
+    },
+  },
+  mounted() {
     const vm = this;
     nodecg.Replicant('ctamessages', 'tds-2020-layouts', { defaultValue: [] });
-    const ctaRep = nodecg.readReplicant('ctamessages', 'tds-2020-layouts', value => {
+    const ctaRep = nodecg.readReplicant('ctamessages', 'tds-2020-layouts', (value) => {
       vm.$data.ctaMessages = value;
     });
   },
   methods: {
-    addMessage: function() {
+    addMessage() {
       const vm = this;
       const today = new Date();
       const year = today.getFullYear();
-      const mon = today.getMonth()+1; //January is 0!
+      const mon = today.getMonth() + 1; // January is 0!
       const date = today.getDate();
       const hr = today.getHours();
       const min = today.getMinutes();
@@ -105,22 +133,16 @@ export default {
       const newCTA = {
         active: vm.newActive,
         content: vm.newContent,
-        id: newID
-      }
+        id: newID,
+      };
       vm.$data.ctaMessages.push(newCTA);
       vm.clearForm();
     },
-    clearForm: function() {
+    clearForm() {
       const vm = this;
       vm.$refs.form.reset();
       vm.$data.newActive = true;
-    }
+    },
   },
-  watch: {
-    ctaMessages: function (newCtaMessage) {
-      const ctaRep = nodecg.Replicant('ctamessages', 'tds-2020-layouts', { defaultValue: [] });
-      ctaRep.value = newCtaMessage;
-    }
-  }
-}
+};
 </script>

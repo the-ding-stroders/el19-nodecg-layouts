@@ -1,6 +1,8 @@
 <template>
   <div id="donation-list">
-    <div class="donation-list-label">Recent Donations:</div>
+    <div class="donation-list-label">
+      Recent Donations:
+    </div>
     <DonationsListItem
       v-for="donation in donations"
       :key="donation.donationID"
@@ -10,35 +12,35 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions } from 'vuex';
 import DonationsListItem from './DonationsListItem.vue';
 
 export default {
   components: {
-    DonationsListItem
-  },
-  computed: {
-      donations () {
-          return this.donationsLimit ? this.$store.state.donations.slice(0,this.donationsLimit) : this.$store.state.donations
-      }
+    DonationsListItem,
   },
   data: () => ({
-    donationsLimit: 6
+    donationsLimit: 6,
   }),
-  methods: {
-      ...mapActions([
-          'updateDonations'
-      ])
+  computed: {
+    donations() {
+      return this.donationsLimit ? this.$store.state.donations.slice(0, this.donationsLimit) : this.$store.state.donations;
+    },
   },
-  mounted: function() {
+  methods: {
+    ...mapActions([
+      'updateDonations',
+    ]),
+  },
+  mounted() {
     const vm = this;
 
-    const donationsRep = nodecg.Replicant('donations')
+    const donationsRep = nodecg.Replicant('donations');
     donationsRep.on('change', () => {
-        this.updateDonations()
-    })
-  }
-}
+      this.updateDonations();
+    });
+  },
+};
 </script>
 
 <style>

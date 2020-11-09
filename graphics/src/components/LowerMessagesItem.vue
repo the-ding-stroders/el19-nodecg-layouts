@@ -1,7 +1,14 @@
 <template>
   <div class="lower-messages-item">
-    <div v-if="message.title" class="title">{{ message.title }}</div>
-    <div class="content">{{ message.content }}</div>
+    <div
+      v-if="message.title"
+      class="title"
+    >
+      {{ message.title }}
+    </div>
+    <div class="content">
+      {{ message.content }}
+    </div>
   </div>
 </template>
 
@@ -11,10 +18,10 @@ export default {
   props: {
     message: {
       type: Object,
-      required: true
-    }
-  }
-}
+      required: true,
+    },
+  },
+};
 </script>
 
 <style scoped>

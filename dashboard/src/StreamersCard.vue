@@ -4,9 +4,11 @@
       <v-card-text>
         <v-toolbar dark>
           <v-toolbar-title>{{ streamer.name }}</v-toolbar-title>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <StreamersDialog :streamer="streamer">
-            <v-icon slot="btnIcon">edit</v-icon>
+            <v-icon slot="btnIcon">
+              edit
+            </v-icon>
           </StreamersDialog>
         </v-toolbar>
         <v-list>
@@ -88,8 +90,8 @@
         </v-btn-toggle>
         <v-btn
           class="mx-2"
-          @click="updateAudio(streamer)"
           icon
+          @click="updateAudio(streamer)"
         >
           <v-icon
             :class="{'green--text': streamer.audio}"
@@ -103,37 +105,37 @@
 </template>
 
 <script>
-import StreamersDialog from './StreamersDialog.vue'
+import StreamersDialog from './StreamersDialog.vue';
 
 export default {
   name: 'StreamersCard',
   components: {
-    StreamersDialog
+    StreamersDialog,
   },
   props: {
     streamer: {
       type: Object,
-      required: true
-    }
-  },
-  methods: {
-    updateAudio: function(target) {
-      nodecg.sendMessage('switchAudio', target);
+      required: true,
     },
-    updatePosition: function(newPosition, streamer) {
-      nodecg.sendMessage('updateStreamPosition', {
-        position: newPosition,
-        streamer: streamer
-      });
-    }
   },
   mounted() {
     const vm = this;
     nodecg.listenFor('streamerUpdated', (newStreamer) => {
-      if(newStreamer.name === streamer.name) {
+      if (newStreamer.name === streamer.name) {
         vm.streamer = newStreamer;
       }
     });
-  }
-}
+  },
+  methods: {
+    updateAudio(target) {
+      nodecg.sendMessage('switchAudio', target);
+    },
+    updatePosition(newPosition, streamer) {
+      nodecg.sendMessage('updateStreamPosition', {
+        position: newPosition,
+        streamer,
+      });
+    },
+  },
+};
 </script>

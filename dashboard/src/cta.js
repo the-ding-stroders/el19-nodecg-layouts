@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import vuetify from '../../extension/plugins/vuetify.js'
-import App from './Cta.vue'
+import Vue from 'vue';
+import vuetify from '../../extension/plugins/vuetify';
+import App from './Cta.vue';
 
-new Vue({
+new Vue({ // eslint-disable-line no-new
   vuetify,
   el: '#app',
-  render: h => h(App)
-})
+  render: (h) => h(App),
+});

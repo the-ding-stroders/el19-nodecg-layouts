@@ -1,7 +1,14 @@
 <template>
-  <div class="discord-member" v-bind:class="{ active: member.speaking }">
-    <div class="avatar"><img :src="member.avatar" /></div>
-    <div class="username">{{ member.nickname }}</div>
+  <div
+    class="discord-member"
+    :class="{ active: member.speaking }"
+  >
+    <div class="avatar">
+      <img :src="member.avatar">
+    </div>
+    <div class="username">
+      {{ member.nickname }}
+    </div>
   </div>
 </template>
 
@@ -10,16 +17,16 @@ export default {
   props: {
     member: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  created: function() {
-    jQuery(".discord-member").fitText();
+  created() {
+    jQuery('.discord-member').fitText();
   },
-  mounted: function() {
-    jQuery(".discord-member").fitText();
-  }
-}
+  mounted() {
+    jQuery('.discord-member').fitText();
+  },
+};
 </script>
 
 <style>

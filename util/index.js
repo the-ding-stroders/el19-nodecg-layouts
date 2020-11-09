@@ -1,5 +1,4 @@
-'use strict';
-
+/* eslint-disable global-require */
 module.exports = {
-	formatDollars: require('./format-dollars')
+  formatDollars: require('./format-dollars'),
 };

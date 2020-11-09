@@ -1,19 +1,34 @@
 <template>
   <div id="app">
     <v-app>
-      <v-container grid-list-md text-xs-center>
-        <v-layout row wrap>
-          <v-flex xs12 align-center justify-center>
+      <v-container
+        grid-list-md
+        text-xs-center
+      >
+        <v-layout
+          row
+          wrap
+        >
+          <v-flex
+            xs12
+            align-center
+            justify-center
+          >
             <v-btn
-              @click="goPrev()"
               :disabled="currentIndex === 0"
+              @click="goPrev()"
             >
               Previous
             </v-btn>
-            <v-btn @click="takeItems()" color="success">Take</v-btn>
             <v-btn
-              @click="goNext()"
+              color="success"
+              @click="takeItems()"
+            >
+              Take
+            </v-btn>
+            <v-btn
               :disabled="nextIndex === schedItems.length"
+              @click="goNext()"
             >
               Next
             </v-btn>
@@ -24,11 +39,21 @@
           <v-flex xs12>
             <v-toolbar dark>
               <v-toolbar-title>Schedule</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-dialog v-model="dialog" persistent max-width="500px">
-                <template v-slot:activator="{ on }">
-                  <v-btn v-on="on" slot="activator" dark>
-                    <v-icon slot="btnIcon">playlist_add</v-icon>
+              <v-spacer />
+              <v-dialog
+                v-model="dialog"
+                persistent
+                max-width="500px"
+              >
+                <template #activator="{ on }">
+                  <v-btn
+                    slot="activator"
+                    dark
+                    v-on="on"
+                  >
+                    <v-icon slot="btnIcon">
+                      playlist_add
+                    </v-icon>
                     New Item
                   </v-btn>
                 </template>
@@ -43,10 +68,10 @@
                           <v-flex xs12>
                             <v-autocomplete
                               v-model="schedItem.category"
+                              v-model:search-input="search"
                               :filter="customFilter"
                               :items="items"
                               :loading="isLoading"
-                              :search-input.sync="search"
                               :mandatory="true"
                               hide-no-data
                               item-text="name"
@@ -54,20 +79,31 @@
                               label="Twitch Category"
                               placeholder="Start typing to search..."
                               return-object
-                            ></v-autocomplete>
+                            />
                           </v-flex>
                           <v-text-field
                             v-model="schedItem.customTitle"
                             label="Custom Title"
-                          ></v-text-field>
+                          />
                         </v-layout>
                       </v-form>
                     </v-container>
                   </v-card-text>
                   <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click.native="close()">Cancel</v-btn>
-                    <v-btn color="success darken-1" @click="save()">Save</v-btn>
+                    <v-spacer />
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click.native="close()"
+                    >
+                      Cancel
+                    </v-btn>
+                    <v-btn
+                      color="success darken-1"
+                      @click="save()"
+                    >
+                      Save
+                    </v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -77,12 +113,17 @@
               :headers="headers"
               :items="schedItems"
             >
-              <template v-slot:body="{ items }">
+              <template #body="{ items }">
                 <tbody>
-                  <tr v-for="(item, index) in items" :key="item.category._id">
+                  <tr
+                    v-for="(item, index) in items"
+                    :key="item.category._id"
+                  >
                     <td>{{ item.category.name }}</td>
-                    <td v-if="item.customTitle">{{ item.customTitle }}</td>
-                      <td v-else></td>
+                    <td v-if="item.customTitle">
+                      {{ item.customTitle }}
+                    </td>
+                    <td v-else />
                     <td v-if="currentIndexLive === index || nextIndexLive === index">
                       <v-chip
                         class="ma-2"
@@ -91,7 +132,7 @@
                         {{ getChipText('live', index) }}
                       </v-chip>
                     </td>
-                      <td v-else></td>
+                    <td v-else />
                     <td v-if="currentIndex !== currentIndexLive && (currentIndex === index || nextIndex === index)">
                       <v-chip
                         class="ma-2"
@@ -101,7 +142,7 @@
                         {{ getChipText('deck', index) }}
                       </v-chip>
                     </td>
-                      <td v-else></td>
+                    <td v-else />
                     <td class="justify-center layout px-0">
                       <v-icon
                         small
@@ -137,174 +178,167 @@
 
 <script>
 export default {
-  name: 'app',
-  created() {
-    nodecg.readReplicant('schedule', 'tds-2020-layouts', schedule => {
-      this.schedItems = schedule;
-    });
-    nodecg.Replicant('schedTake', 'tds-2020-layouts', { defaultValue: {
-      'current': 0,
-      'next': 1
-    }});
-    nodecg.readReplicant('schedTake', 'tds-2020-layouts', schedTake => {
-      this.currentIndex = this.currentIndexLive = schedTake.current;
-      this.nextIndex = this.nextIndexLive = schedTake.next;
-    });
-  },
+  name: 'App',
   data: () => ({
     categoryEntries: [],
     currentIndex: 0,
     currentIndexLive: 0,
     defaultItem: {
       customTitle: null,
-      category: null
+      category: null,
     },
     dialog: false,
     editedIndex: -1,
     headers: [
-        {
-            text: 'Category',
-            value: 'category.name'
-        },
-        {
-            text: 'Custom Title',
-            value: 'customTitle'
-        },
-        {
-            text: 'Live?'
-        },
-        {
-            text: 'On Deck?'
-        },
-        {
-            text: 'Actions'
-        }
+      {
+        text: 'Category',
+        value: 'category.name',
+      },
+      {
+        text: 'Custom Title',
+        value: 'customTitle',
+      },
+      {
+        text: 'Live?',
+      },
+      {
+        text: 'On Deck?',
+      },
+      {
+        text: 'Actions',
+      },
     ],
     isLoading: false,
     nextIndex: 1,
     nextIndexLive: 1,
     schedItem: {
-        customTitle: null,
-        category: null
+      customTitle: null,
+      category: null,
     },
     schedItems: [],
-    search: null
+    search: null,
   }),
+  computed: {
+    items() {
+      return this.categoryEntries.map((entry) => ({ ...entry }));
+    },
+  },
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+    schedItems(items) {
+      const schedRep = nodecg.Replicant('schedule', 'tds-2020-layouts');
+      schedRep.value = items;
+    },
+    search(val) {
+      // No query sent
+      if (!val) return;
+
+      this.isLoading = true;
+      this.fetchEntriesDebounced(val);
+    },
+  },
+  created() {
+    nodecg.readReplicant('schedule', 'tds-2020-layouts', (schedule) => {
+      this.schedItems = schedule;
+    });
+    nodecg.Replicant('schedTake', 'tds-2020-layouts', {
+      defaultValue: {
+        current: 0,
+        next: 1,
+      },
+    });
+    nodecg.readReplicant('schedTake', 'tds-2020-layouts', (schedTake) => {
+      this.currentIndex = this.currentIndexLive = schedTake.current;
+      this.nextIndex = this.nextIndexLive = schedTake.next;
+    });
+  },
   methods: {
-    close () {
-      this.dialog = false
-      this.schedItem = Object.assign({}, this.defaultItem)
-      this.editedIndex = -1
-      this.search = null
+    close() {
+      this.dialog = false;
+      this.schedItem = { ...this.defaultItem };
+      this.editedIndex = -1;
+      this.search = null;
     },
-    customFilter (item, queryText, itemText) {
-        if(queryText < 4) return false;
-        return queryText;
+    customFilter(item, queryText, itemText) {
+      if (queryText < 4) return false;
+      return queryText;
     },
-    deleteItem (index) {
+    deleteItem(index) {
       const schedArr = JSON.parse(JSON.stringify(this.schedItems));
-      confirm('Are you sure you want to delete this item?') && schedArr.splice(index, 1)
+      confirm('Are you sure you want to delete this item?') && schedArr.splice(index, 1);
       this.schedItems = schedArr;
     },
-    editItem (index) {
+    editItem(index) {
       this.editedIndex = index;
-      this.schedItem = Object.assign({}, this.schedItems[index])
-      this.search = this.schedItem.category.name
-      this.dialog = true
+      this.schedItem = { ...this.schedItems[index] };
+      this.search = this.schedItem.category.name;
+      this.dialog = true;
     },
     fetchEntries(val) {
-        // Load items from Twitch API
-        nodecg.sendMessage('searchTwitchCategories', val)
-            .then(result => {
-                this.categoryEntries = result
-            }).catch(error => {
-                console.error(error)
-            })
-            .finally(() => (this.isLoading = false))
+      // Load items from Twitch API
+      nodecg.sendMessage('searchTwitchCategories', val)
+        .then((result) => {
+          this.categoryEntries = result;
+        }).catch((error) => {
+          console.error(error);
+        })
+        .finally(() => (this.isLoading = false));
     },
     fetchEntriesDebounced(val) {
-        clearTimeout(this._searchTimerId)
-        this._searchTimerId = setTimeout(() => {
-            this.fetchEntries(val)
-        }, 500) /* 500ms throttle */
+      clearTimeout(this._searchTimerId);
+      this._searchTimerId = setTimeout(() => {
+        this.fetchEntries(val);
+      }, 500); /* 500ms throttle */
     },
     getChipColor(liveOrDeck, index) {
       if (liveOrDeck === 'deck') {
         if (index === this.currentIndex) {
-          return 'rgba(0, 100, 0, 1)'
-        } else {
-          return 'rgba(255, 140, 0, 1)'
+          return 'rgba(0, 100, 0, 1)';
         }
-      } else {
-        if (index === this.currentIndexLive) {
-          return 'rgba(0, 100, 0, 1)'
-        } else {
-          return 'rgba(255, 140, 0, 1)'
-        }
+        return 'rgba(255, 140, 0, 1)';
       }
+      if (index === this.currentIndexLive) {
+        return 'rgba(0, 100, 0, 1)';
+      }
+      return 'rgba(255, 140, 0, 1)';
     },
     getChipText(liveOrDeck, index) {
       if (liveOrDeck === 'deck') {
         if (index === this.currentIndex) {
-          return 'current'
-        } else {
-          return 'next'
+          return 'current';
         }
-      } else {
-        if (index === this.currentIndexLive) {
-          return 'current'
-        } else {
-          return 'next'
-        }
+        return 'next';
       }
+      if (index === this.currentIndexLive) {
+        return 'current';
+      }
+      return 'next';
     },
     goNext() {
       this.currentIndex++;
       this.nextIndex++;
-
     },
     goPrev() {
       this.currentIndex--;
       this.nextIndex--;
     },
-    save () {
-        let schedArr = JSON.parse(JSON.stringify(this.schedItems));
-        if (this.editedIndex > -1) {
-          Object.assign(this.schedItems[this.editedIndex], this.schedItem)
-        } else {
-          schedArr.push(this.schedItem)
-          this.schedItems = schedArr;
-        }
-        this.close()
+    save() {
+      const schedArr = JSON.parse(JSON.stringify(this.schedItems));
+      if (this.editedIndex > -1) {
+        Object.assign(this.schedItems[this.editedIndex], this.schedItem);
+      } else {
+        schedArr.push(this.schedItem);
+        this.schedItems = schedArr;
+      }
+      this.close();
     },
-    takeItems () {
+    takeItems() {
       const schedTakeRep = nodecg.Replicant('schedTake', 'tds-2020-layouts');
       schedTakeRep.value.current = this.currentIndexLive = this.currentIndex;
       schedTakeRep.value.next = this.nextIndexLive = this.nextIndex;
     },
   },
-  computed: {
-    items () {
-      return this.categoryEntries.map(entry => {
-          return Object.assign({}, entry)
-      })
-    }
-  },
-  watch: {
-    dialog (val) {
-      val || this.close()
-    },
-    schedItems (items) {
-      const schedRep = nodecg.Replicant('schedule', 'tds-2020-layouts');
-      schedRep.value = items;
-    },
-    search (val) {
-        // No query sent
-        if (!val) return
-
-        this.isLoading = true
-        this.fetchEntriesDebounced(val)
-    }
-  }
-}
+};
 </script>

@@ -1,5 +1,8 @@
 <template>
-  <div class="donation" :class="'id-' + donation.donationID">
+  <div
+    class="donation"
+    :class="'id-' + donation.donationID"
+  >
     <span v-if="donation.displayName">{{ donation.amount | toCurrency }} - {{ donation.displayName }}</span>
     <span v-else>{{ donation.amount | toCurrency }} - Anonymous</span>
   </div>
@@ -10,16 +13,16 @@ export default {
   props: {
     donation: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
-  mounted: function() {
-    jQuery(".id-" + this.donation.donationID).textfill({
+  mounted() {
+    jQuery(`.id-${this.donation.donationID}`).textfill({
       allowOverflow: true,
-      maxFontPixels: 24
+      maxFontPixels: 24,
     });
-  }
-}
+  },
+};
 </script>
 
 <style>

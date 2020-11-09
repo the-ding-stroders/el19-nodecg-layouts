@@ -1,6 +1,5 @@
-'use strict';
-const nodecg = require('./util/nodecg-api-context').get();
 const request = require('request');
+const nodecg = require('./util/nodecg-api-context').get();
 
 const DONATION_STATS_URL = nodecg.bundleConfig.donationStatsUrl;
 const formatDollars = require('../util/format-dollars');
@@ -11,16 +10,17 @@ const donationRep = nodecg.Replicant(
   'donations',
   {
     defaultValue: [],
-    persistent: false
-  });
+    persistent: false,
+  },
+);
 
-autoUpdateTotal.on('change', newVal => {
-	if (newVal) {
-		nodecg.log.info('Automatic updating of donation total enabled');
-		manuallyUpdateTotal(true);
-	} else {
-		nodecg.log.warn('Automatic updating of donation total DISABLED');
-	}
+autoUpdateTotal.on('change', (newVal) => {
+  if (newVal) {
+    nodecg.log.info('Automatic updating of donation total enabled');
+    manuallyUpdateTotal(true);
+  } else {
+    nodecg.log.warn('Automatic updating of donation total DISABLED');
+  }
 });
 
 if (nodecg.bundleConfig && nodecg.bundleConfig.donationSocketUrl) {
@@ -28,65 +28,65 @@ if (nodecg.bundleConfig && nodecg.bundleConfig.donationSocketUrl) {
   const ReconnectingWebSocket = require('reconnecting-websocket');
   const WebSocket = require('ws');
   const rwsOptions = {
-    WebSocket: WebSocket
+    WebSocket,
   };
 
   const rws = new ReconnectingWebSocket(
     nodecg.bundleConfig.donationSocketUrl,
     [],
-    rwsOptions
+    rwsOptions,
   );
-	let loggedXhrPollError = false;
+  let loggedXhrPollError = false;
 
-	rws.addEventListener('open', () => {
-		nodecg.log.info('Connected to donation socket', nodecg.bundleConfig.donationSocketUrl);
-		loggedXhrPollError = false;
-	});
+  rws.addEventListener('open', () => {
+    nodecg.log.info('Connected to donation socket', nodecg.bundleConfig.donationSocketUrl);
+    loggedXhrPollError = false;
+  });
 
-	// Get initial data, then listen for donations.
-	updateTotal().then(() => {
-		rws.addEventListener('message', event => {
+  // Get initial data, then listen for donations.
+  updateTotal().then(() => {
+    rws.addEventListener('message', (event) => {
       const response = JSON.parse(event.data);
       const data = response.content;
-			if (!data || !data.rawAmount) {
-				return;
-			}
+      if (!data || !data.rawAmount) {
+        return;
+      }
 
-			const donation = formatDonation(data);
-			donationRep.value = {
-				'id': data.id,
-				'name': data.name,
-				'amount': donation.amount,
-        'raw': donation.rawAmount
-			}
+      const donation = formatDonation(data);
+      donationRep.value = {
+        id: data.id,
+        name: data.name,
+        amount: donation.amount,
+        raw: donation.rawAmount,
+      };
       nodecg.sendMessage('donation', donation);
-			if (autoUpdateTotal.value) {
-				total.value = {
-					raw: donation.rawNewTotal,
-					formatted: donation.newTotal
-				};
-			}
-		});
-	});
+      if (autoUpdateTotal.value) {
+        total.value = {
+          raw: donation.rawNewTotal,
+          formatted: donation.newTotal,
+        };
+      }
+    });
+  });
 
-	rws.addEventListener('close', () => {
-		nodecg.log.error('Disconnected from donation socket, can not receive donations!');
-	});
+  rws.addEventListener('close', () => {
+    nodecg.log.error('Disconnected from donation socket, can not receive donations!');
+  });
 
-	rws.addEventListener('error', err => {
-		nodecg.log.error('Donation socket error:', err);
-	});
+  rws.addEventListener('error', (err) => {
+    nodecg.log.error('Donation socket error:', err);
+  });
 } else {
-	nodecg.log.warn(`cfg/${nodecg.bundleName}.json is missing the "donationSocketUrl" property.` +
-		'\n\tThis means that we cannot receive new incoming PayPal donations from the tracker,' +
-		'\n\tand that donation notifications will not be displayed as a result. The total also will not update.');
+  nodecg.log.warn(`cfg/${nodecg.bundleName}.json is missing the "donationSocketUrl" property.`
+    + '\n\tThis means that we cannot receive new incoming PayPal donations from the tracker,'
+    + '\n\tand that donation notifications will not be displayed as a result. The total also will not update.');
 }
 
-nodecg.listenFor('setTotal', ({type, newValue}) => {
-	total.value = {
-		raw: parseFloat(newValue),
-		formatted: formatDollars(newValue, {cents: false})
-	};
+nodecg.listenFor('setTotal', ({ type, newValue }) => {
+  total.value = {
+    raw: parseFloat(newValue),
+    formatted: formatDollars(newValue, { cents: false }),
+  };
 });
 
 // Dashboard can invoke manual updates
@@ -99,22 +99,22 @@ nodecg.listenFor('updateTotal', manuallyUpdateTotal);
  * @returns {undefined}
  */
 function manuallyUpdateTotal(silent, cb = function () {}) {
-	if (!silent) {
-		nodecg.log.info('Manual donation total update button pressed, invoking update...');
-	}
+  if (!silent) {
+    nodecg.log.info('Manual donation total update button pressed, invoking update...');
+  }
 
-	updateTotal().then(updated => {
-		if (updated) {
-			nodecg.sendMessage('total:manuallyUpdated', total.value);
-			nodecg.log.info('Donation total successfully updated');
-		} else {
-			nodecg.log.info('Donation total unchanged, not updated');
-		}
+  updateTotal().then((updated) => {
+    if (updated) {
+      nodecg.sendMessage('total:manuallyUpdated', total.value);
+      nodecg.log.info('Donation total successfully updated');
+    } else {
+      nodecg.log.info('Donation total unchanged, not updated');
+    }
 
-		cb(null, updated);
-	}).catch(error => {
-		cb(error);
-	});
+    cb(null, updated);
+  }).catch((error) => {
+    cb(error);
+  });
 }
 
 /**
@@ -122,40 +122,40 @@ function manuallyUpdateTotal(silent, cb = function () {}) {
  * @returns {Promise} - A promise.
  */
 function updateTotal() {
-	return new Promise((resolve, reject) => {
-		request(DONATION_STATS_URL, (error, response, body) => {
-			if (!error && response.statusCode === 200) {
-				let stats;
-				try {
-					stats = JSON.parse(body);
-				} catch (e) {
-					nodecg.log.error('Could not parse total, response not valid JSON:\n\t', body);
-					return;
-				}
+  return new Promise((resolve, reject) => {
+    request(DONATION_STATS_URL, (error, response, body) => {
+      if (!error && response.statusCode === 200) {
+        let stats;
+        try {
+          stats = JSON.parse(body);
+        } catch (e) {
+          nodecg.log.error('Could not parse total, response not valid JSON:\n\t', body);
+          return;
+        }
 
-				const freshTotal = parseFloat(stats.donationSum || 0);
+        const freshTotal = parseFloat(stats.donationSum || 0);
 
-				if (freshTotal === total.value.raw) {
-					resolve(false);
-				} else {
-					total.value = {
-						raw: freshTotal,
-						formatted: formatDollars(freshTotal, {cents: false})
-					};
-					resolve(true);
-				}
-			} else {
-				let msg = 'Could not get donation total, unknown error';
-				if (error) {
-					msg = `Could not get donation total:\n${error.message}`;
-				} else if (response) {
-					msg = `Could not get donation total, response code ${response.statusCode}`;
-				}
-				nodecg.log.error(msg);
-				reject(msg);
-			}
-		});
-	});
+        if (freshTotal === total.value.raw) {
+          resolve(false);
+        } else {
+          total.value = {
+            raw: freshTotal,
+            formatted: formatDollars(freshTotal, { cents: false }),
+          };
+          resolve(true);
+        }
+      } else {
+        let msg = 'Could not get donation total, unknown error';
+        if (error) {
+          msg = `Could not get donation total:\n${error.message}`;
+        } else if (response) {
+          msg = `Could not get donation total, response code ${response.statusCode}`;
+        }
+        nodecg.log.error(msg);
+        reject(msg);
+      }
+    });
+  });
 }
 
 /**
@@ -165,22 +165,22 @@ function updateTotal() {
  * @param {Number} rawNewTotal - The new numeric donation total, including this donation.
  * @returns {{amount: String, rawAmount: Number, newTotal: String, rawNewTotal: Number}} - A formatted donation.
  */
-function formatDonation({rawAmount, newTotal}) {
-	rawAmount = parseFloat(rawAmount);
-	const rawNewTotal = parseFloat(newTotal);
+function formatDonation({ rawAmount, newTotal }) {
+  rawAmount = parseFloat(rawAmount);
+  const rawNewTotal = parseFloat(newTotal);
 
-	// Format amount
-	let amount = formatDollars(rawAmount);
+  // Format amount
+  let amount = formatDollars(rawAmount);
 
-	// If a whole dollar, get rid of cents
-	if (amount.endsWith('.00')) {
-		amount = amount.substr(0, amount.length - 3);
-	}
+  // If a whole dollar, get rid of cents
+  if (amount.endsWith('.00')) {
+    amount = amount.substr(0, amount.length - 3);
+  }
 
-	return {
-		amount,
-		rawAmount,
-		newTotal: formatDollars(rawNewTotal, {cents: false}),
-		rawNewTotal
-	};
+  return {
+    amount,
+    rawAmount,
+    newTotal: formatDollars(rawNewTotal, { cents: false }),
+    rawNewTotal,
+  };
 }

@@ -1,17 +1,23 @@
 <template>
   <div id="app">
     <v-app>
-      <v-container grid-list-md text-xs-center>
-        <v-layout row wrap>
+      <v-container
+        grid-list-md
+        text-xs-center
+      >
+        <v-layout
+          row
+          wrap
+        >
           <StreamersCard
             v-for="streamer in streamers"
             :key="streamer.name"
             :streamer="streamer"
-          ></StreamersCard>
+          />
           <v-flex xs4>
             <v-card>
               <v-card-text>
-                <StreamersDialog></StreamersDialog>
+                <StreamersDialog />
               </v-card-text>
             </v-card>
           </v-flex>
@@ -22,33 +28,31 @@
 </template>
 
 <script>
-import StreamersCard from './StreamersCard.vue'
-import StreamersDialog from './StreamersDialog.vue'
+import StreamersCard from './StreamersCard.vue';
+import StreamersDialog from './StreamersDialog.vue';
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
     StreamersCard,
-    StreamersDialog
+    StreamersDialog,
   },
   data: () => ({
     discord: null,
     name: null,
     url: null,
     twitter: null,
-    streamers: {}
+    streamers: {},
   }),
-  methods: {
-    updateStreamers: function() {
-      const vm = this;
-      nodecg.readReplicant('tds:streamers', streamers => {
-        vm.$data.streamers = streamers;
-      });
-    }
+  watch: {
+    streamers(updStreamers) {
+      const streamerRep = nodecg.Replicant('tds:streamers');
+      streamerRep.value = updStreamers;
+    },
   },
-  mounted: function() {
+  mounted() {
     const vm = this;
-    nodecg.readReplicant('tds:streamers', streamers => {
+    nodecg.readReplicant('tds:streamers', (streamers) => {
       vm.$data.streamers = streamers;
     });
     nodecg.listenFor('layoutUpdated', () => {
@@ -58,12 +62,13 @@ export default {
       vm.updateStreamers();
     });
   },
-  watch: {
-    streamers: function (updStreamers) {
-      const streamerRep = nodecg.Replicant('tds:streamers');
-      streamerRep.value = updStreamers;
-
-    }
-  }
-}
+  methods: {
+    updateStreamers() {
+      const vm = this;
+      nodecg.readReplicant('tds:streamers', (streamers) => {
+        vm.$data.streamers = streamers;
+      });
+    },
+  },
+};
 </script>

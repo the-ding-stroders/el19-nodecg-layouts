@@ -1,15 +1,19 @@
 <template>
   <div class="lower-messages">
     <div class="lower-messages-item">
-      <div class="label">{{ message.label }}</div>
-      <div class="content">{{ message.content }}</div>
+      <div class="label">
+        {{ message.label }}
+      </div>
+      <div class="content">
+        {{ message.content }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { eachSeries } from 'async-es'
-import { gsap } from 'gsap'
+import { eachSeries } from 'async-es';
+import { gsap } from 'gsap';
 
 export default {
   name: 'LowerMessages',
@@ -17,78 +21,77 @@ export default {
     return {
       message: {
         content: null,
-        label: null
+        label: null,
       },
       parts: [],
       contentVisible: false,
       labelVisible: false,
       ctaMessages: [],
       schedule: {
-        'current': ' ',
-        'next': ' '
+        current: ' ',
+        next: ' ',
       },
-      scrollHoldDuration: 5
-    }
+      scrollHoldDuration: 5,
+    };
   },
   created() {
     this.populateSchedule();
   },
   mounted() {
     const vm = this;
-    const ctaRep = nodecg.Replicant('ctamessages')
-    const schedRep = nodecg.Replicant('schedule')
-    const schedTakeRep = nodecg.Replicant('schedTake')
+    const ctaRep = nodecg.Replicant('ctamessages');
+    const schedRep = nodecg.Replicant('schedule');
+    const schedTakeRep = nodecg.Replicant('schedTake');
     vm.$data.scrollHoldDuration = nodecg.bundleConfig.omnibar.scrollHoldDuration;
-    
+
     // Wait for replicants to load, then start the schedule rotation
     NodeCG.waitForReplicants(ctaRep, schedRep, schedTakeRep).then(() => {
       vm.runTimeline();
-    })
+    });
   },
   methods: {
-    visibilityChanged (isVisible, entry) {
-      this.isVisible = isVisible
+    visibilityChanged(isVisible, entry) {
+      this.isVisible = isVisible;
     },
-    hideContent: function(tl) {
+    hideContent(tl) {
       tl.to({}, 0.03, {});
       tl.to('.content', 0.5, {
         opacity: 0,
-        ease: "linear"
-      })
+        ease: 'linear',
+      });
       return tl;
     },
-    hideLabel: function(tl) {
+    hideLabel(tl) {
       const hideLabel = gsap.timeline();
 
       tl.to({}, 0.03, {});
       tl.to('.label', 0.3, {
         autoAlpha: 0,
-        display: "none",
-        ease: "linear"
-      })
+        display: 'none',
+        ease: 'linear',
+      });
       return tl;
     },
-    populateMessages: function() {
+    populateMessages() {
       const vm = this;
 
-      let ctaRep = nodecg.readReplicant('ctamessages', 'tds-2020-layouts', ctas => {
+      const ctaRep = nodecg.readReplicant('ctamessages', 'tds-2020-layouts', (ctas) => {
         vm.$data.ctaMessages = [];
         eachSeries(ctas, (cta, callback) => {
           if (cta.active === true) {
             vm.$data.ctaMessages.push(cta);
           }
           callback();
-        }, err => {
+        }, (err) => {
           if (err) nodecg.log.error(err);
-          return;
         });
       });
     },
-    populateSchedule: function() {
+    populateSchedule() {
       const vm = this;
 
-      nodecg.readReplicant('schedule', 'tds-2020-layouts', schedule => {
-        nodecg.readReplicant('schedTake', 'tds-2020-layouts', schedIndexes => {
+      nodecg.readReplicant('schedule', 'tds-2020-layouts', (schedule) => {
+        nodecg.readReplicant('schedTake', 'tds-2020-layouts', (schedIndexes) => {
           const schedCurrent = schedule[schedIndexes.current];
           const schedNext = schedule[schedIndexes.next];
 
@@ -103,18 +106,17 @@ export default {
           } else {
             vm.schedule.next = schedNext.category.name;
           }
-          return;
         });
       });
     },
-    processNextPart: function() {
+    processNextPart() {
       const vm = this;
 
       if (vm.parts.length > 0) {
         const part = vm.parts.shift().bind(vm);
         vm.promisifyTimeline(part())
           .then(vm.processNextPart)
-          .catch(error => {
+          .catch((error) => {
             nodecg.log.error('Error when running main loop:', error);
           });
       } else {
@@ -122,24 +124,24 @@ export default {
         vm.runTimeline();
       }
     },
-    promisifyTimeline: function(tl) {
-      return new Promise(resolve => {
+    promisifyTimeline(tl) {
+      return new Promise((resolve) => {
         tl.call(resolve, null, null, '+=0.03');
       });
     },
-    runTimeline: function() {
+    runTimeline() {
       const vm = this;
       vm.populateSchedule();
       vm.populateMessages();
       vm.parts = [
         vm.showCTA,
         vm.showCurrent,
-        vm.showUpNext
-      ]
+        vm.showUpNext,
+      ];
 
       vm.processNextPart();
     },
-    setContent: function(tl, text) {
+    setContent(tl, text) {
       const vm = this;
       tl.to({}, 0.03, {});
       tl.call(() => {
@@ -148,59 +150,59 @@ export default {
         tl.resume(null, false);
       });
     },
-    showContent: function(tl) {
+    showContent(tl) {
       const vm = this;
-      const scrollHoldDuration = vm.$data.scrollHoldDuration;
+      const { scrollHoldDuration } = vm.$data;
       tl.to({}, 0.03, {});
       tl.to('.content', 0.5, {
         opacity: 1,
-        ease: "linear"
-      })
+        ease: 'linear',
+      });
       tl.to({}, scrollHoldDuration, {});
 
       return tl;
     },
-    showCTA: function(message) {
+    showCTA(message) {
       const vm = this;
       const tl = gsap.timeline();
       const messages = vm.ctaMessages;
 
       vm.hideLabel(tl);
-      messages.forEach(message => {
+      messages.forEach((message) => {
         vm.setContent(tl, message.content);
         vm.showContent(tl);
         vm.hideContent(tl);
       });
       return tl;
     },
-    showCurrent: function() {
+    showCurrent() {
       const vm = this;
       const tl = gsap.timeline();
 
       vm.setContent(tl, vm.schedule.current);
-      vm.showLabel("Right Now:");
+      vm.showLabel('Right Now:');
       vm.showContent(tl);
       vm.hideContent(tl);
 
       return tl;
     },
-    showLabel: function(text, color='#E8FF51') {
+    showLabel(text, color = '#E8FF51') {
       const vm = this;
       const showLabel = gsap.timeline();
-      const scrollHoldDuration = vm.$data.scrollHoldDuration;
+      const { scrollHoldDuration } = vm.$data;
 
       vm.$data.message.label = text;
 
       showLabel.to({}, 0.03, {});
       showLabel.to('.label', 0.5, {
         autoAlpha: 1,
-        display: "inline-block",
-        ease: "linear"
+        display: 'inline-block',
+        ease: 'linear',
       });
       showLabel.to({}, scrollHoldDuration, {});
       return showLabel;
     },
-    showUpNext: function() {
+    showUpNext() {
       const vm = this;
       const tl = gsap.timeline();
 
@@ -209,9 +211,9 @@ export default {
       vm.showContent(tl);
       vm.hideContent(tl);
       return tl;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>

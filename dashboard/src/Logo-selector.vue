@@ -1,21 +1,21 @@
 <template>
-    <v-app>
-        <LogoSelectorTDS></LogoSelectorTDS>
-        <LogoSelectorCharities></LogoSelectorCharities>
-    </v-app>
+  <v-app>
+    <LogoSelectorTDS />
+    <LogoSelectorCharities />
+  </v-app>
 </template>
 
 <script>
-import LogoSelectorTDS from './components/LogoSelectorTDS'
-import LogoSelectorCharities from './components/LogoSelectorCharities'
+import LogoSelectorTDS from './components/LogoSelectorTDS.vue';
+import LogoSelectorCharities from './components/LogoSelectorCharities.vue';
 
 export default {
-    name: 'app',
-    components: {
-        LogoSelectorCharities,
-        LogoSelectorTDS
-    }
-}
+  name: 'App',
+  components: {
+    LogoSelectorCharities,
+    LogoSelectorTDS,
+  },
+};
 </script>
 
 <style>
