@@ -1,7 +1,7 @@
 {
   "extends": [
     "airbnb-base",
-    "plugin:vue/vue3-recommended"
+    "plugin:vue/recommended"
   ],
   "globals": {
     "nodecg": "readonly",
