@@ -26,7 +26,10 @@ module.exports = [
         },
         {
           test: /\.otf$/,
-          loader: 'url-loader?limit=100000',
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+          },
         },
       ],
     },
@@ -65,7 +68,10 @@ module.exports = [
         },
         {
           test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|otf)$/,
-          loader: 'url-loader?limit=100000',
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+          },
         },
       ],
     },
