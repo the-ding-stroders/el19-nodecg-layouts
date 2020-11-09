@@ -49,11 +49,19 @@ export default {
     TDSLogo
   },
   data: () => ({
-    donationAmount: 0
+    donationAmount: 0,
+    fundraisingGoal: 0
   }),
   mounted() {
     const vm = this;
+    const fundGoalRep = nodecg.Replicant('fundraisingGoal');
     const totalRep = nodecg.Replicant('total');
+
+    fundGoalRep.on('change', (newValue) => {
+      nodecg.readReplicant('fundraisingGoal', value => {
+        vm.fundraisingGoal = value;
+      });
+    });
 
     nodecg.readReplicant('total', value => {
       vm.donationAmount = value;

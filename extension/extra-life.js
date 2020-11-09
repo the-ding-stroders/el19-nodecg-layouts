@@ -2,8 +2,10 @@
 const nodecg = require('./util/nodecg-api-context').get();
 const extraLife = require('extra-life');
 const TEAM_ID = nodecg.bundleConfig.teamID;
+const EL_UPDATE_INTERVAL = nodecg.bundleConfig.elUpdateInterval;
 
 const totalRep = nodecg.Replicant('total');
+const fundGoalRep = nodecg.Replicant('fundraisingGoal');
 const donationRep = nodecg.Replicant(
   'donations',
   {
@@ -12,9 +14,10 @@ const donationRep = nodecg.Replicant(
   }
 );
 
-// donationRep.on('change', (newValue, oldValue) => {
-//   console.log(JSON.stringify(newValue));
-// })
+// Set a replicant for the team's fundraising goal
+extraLife.getTeam(TEAM_ID).then(teamInfo => {
+  fundGoalRep.value = teamInfo.fundraisingGoal;
+});
 
 function checkForDonations() {
   extraLife.getTeamDonations(TEAM_ID, 10).then(donations => {
@@ -23,12 +26,13 @@ function checkForDonations() {
       donationRep.value = donations.records;
       extraLife.getTeam(TEAM_ID).then(teamInfo => {
         totalRep.value = teamInfo.sumDonations;
-        nodecg.sendMessage('donation');
+        nodecg.sendMessage('donationAlert');
       })
     }
   })
 }
 
+// Check for new donations on an interval
 setInterval(function () {
   checkForDonations()
-}, 10000)
+}, EL_UPDATE_INTERVAL * 1000)

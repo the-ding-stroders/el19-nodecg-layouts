@@ -6,6 +6,11 @@
 			"type": "string",
 			"description": "Client token to use for authenticating the Discord bot"
 		},
+		"elUpdateInterval": {
+			"type": "integer",
+			"default": 10,
+			"description": "How often (in seconds) to check for new Extra Life donations"
+		},
 		"mpd": {
 			"type": "object",
 			"properties": {
