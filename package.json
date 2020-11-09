@@ -71,12 +71,6 @@
         "singleInstance": false
       },
       {
-        "file": "layout.html",
-        "width": 1920,
-        "height": 1080,
-        "singleInstance": false
-      },
-      {
         "file": "idle.html",
         "width": 1920,
         "height": 1080,

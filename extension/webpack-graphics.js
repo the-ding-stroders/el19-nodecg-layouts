@@ -51,48 +51,6 @@ module.exports = [
     },
   },
   {
-    entry: `${gfxJsPath}src/layout.js`,
-    mode: 'development',
-    module: {
-      rules: [
-        {
-          test: /\.css$/,
-          use: [
-            'style-loader',
-            'css-loader',
-          ],
-        },
-        {
-          test: /\.vue$/,
-          loader: 'vue-loader',
-        },
-        {
-          test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|otf)$/,
-          loader: 'url-loader',
-          options: {
-            limit: 100000,
-          },
-        },
-      ],
-    },
-    output: {
-      path: `${gfxJsPath}dist`,
-      filename: 'layout.bundle.js',
-    },
-    plugins: [
-      new VueLoaderPlugin(),
-    ],
-    resolve: {
-      extensions: ['.js', '.vue', '.json'],
-      alias: {
-        vue$: 'vue/dist/vue.esm.js',
-      },
-    },
-    resolveLoader: {
-      modules: [nodeModulesPath, bowerModulesPath],
-    },
-  },
-  {
     entry: `${gfxJsPath}src/idle.js`,
     mode: 'development',
     module: {
