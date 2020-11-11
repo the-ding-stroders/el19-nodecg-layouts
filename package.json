@@ -32,7 +32,8 @@
   "nodecg": {
     "compatibleRange": "^1.6.0",
     "bundleDependencies": {
-      "lfg-twitchapi": "^2.0.0"
+      "lfg-twitchapi": "^2.0.0",
+      "nodecg-toaster": "0.1.0"
     },
     "dashboardPanels": [
       {
@@ -72,6 +73,12 @@
       },
       {
         "file": "idle.html",
+        "width": 1920,
+        "height": 1080,
+        "singleInstance": false
+      },
+      {
+        "file": "notifications.html",
         "width": 1920,
         "height": 1080,
         "singleInstance": false

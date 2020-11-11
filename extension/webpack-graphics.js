@@ -85,4 +85,46 @@ module.exports = [
       modules: [nodeModulesPath, bowerModulesPath],
     },
   },
+  {
+    entry: `${gfxJsPath}src/notifications.js`,
+    mode: 'development',
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            'style-loader',
+            'css-loader',
+          ],
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+        },
+        {
+          test: /\.otf$/,
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+          },
+        },
+      ],
+    },
+    output: {
+      path: `${gfxJsPath}dist`,
+      filename: 'notifications.bundle.js',
+    },
+    plugins: [
+      new VueLoaderPlugin(),
+    ],
+    resolve: {
+      extensions: ['.js', '.vue', '.json'],
+      alias: {
+        vue$: 'vue/dist/vue.esm.js',
+      },
+    },
+    resolveLoader: {
+      modules: [nodeModulesPath, bowerModulesPath],
+    },
+  },
 ];
