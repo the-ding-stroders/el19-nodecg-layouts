@@ -10,7 +10,6 @@ const donationRep = nodecg.Replicant(
   'donations',
   {
     defaultValue: [],
-    persistent: false,
   },
 );
 
