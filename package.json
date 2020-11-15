@@ -33,6 +33,7 @@
     "compatibleRange": "^1.6.0",
     "bundleDependencies": {
       "lfg-twitchapi": "^2.0.0",
+      "nodecg-shout-dis": "0.1.0",
       "nodecg-toaster": "0.1.0"
     },
     "dashboardPanels": [

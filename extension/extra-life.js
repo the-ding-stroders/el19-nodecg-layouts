@@ -19,13 +19,45 @@ extraLife.getTeam(TEAM_ID).then((teamInfo) => {
 });
 
 function checkForDonations() {
-  extraLife.getTeamDonations(TEAM_ID, 10).then((donations) => {
-    const newDonations = JSON.stringify(donations.records) !== JSON.stringify(donationRep.value);
-    if (newDonations) {
-      donationRep.value = donations.records;
-      extraLife.getTeam(TEAM_ID).then((teamInfo) => {
-        totalRep.value = teamInfo.sumDonations;
-        nodecg.sendMessage('donationAlert');
+  // Grab the last 10 donations from Extra Life
+  extraLife.getTeamDonations(TEAM_ID, 10).then((donationResults) => {
+    const elDonations = donationResults.records;
+    const knownDonations = donationRep.value;
+    const newDonationsCheck = JSON.stringify(elDonations) !== JSON.stringify(knownDonations);
+
+    if (newDonationsCheck === true) {
+      // Get the new donations that aren't known by us yet
+      const newDonations = [elDonations, knownDonations].sort((a, b) => b.length - a.length)
+        .reduce((a, b) => a.filter((o) => !b.some((v) => v.id === o.id)));
+
+      // Update our known donations with what Extra Life sent
+      donationRep.value = elDonations;
+      extraLife.getTeam(TEAM_ID).then((teamInfoResults) => {
+        // Update the team's total value and send out some notifications
+        totalRep.value = teamInfoResults.sumDonations;
+        nodecg.sendMessage('donationAlert', newDonations);
+        Object.values(newDonations).forEach((newDonation) => {
+          nodecg.sendMessageToBundle('postDiscordMessage', 'nodecg-shout-dis', {
+            title: 'New Extra Life Donation!',
+            content: `$${newDonation.amount} from ${newDonation.displayName}!`,
+            color: '#E8FF51',
+            fields: [
+              {
+                name: 'Donation Recipient',
+                value: newDonation.recipientName,
+              },
+            ],
+            thumbnail: `https:${newDonation.avatarImageURL}`,
+            timestamp: newDonation.createdDateUTC,
+          }, (error, result) => {
+            if (error) {
+              nodecg.log.error(error);
+              return;
+            }
+
+            nodecg.log.info(result);
+          });
+        });
       });
     }
   });
@@ -33,5 +65,6 @@ function checkForDonations() {
 
 // Check for new donations on an interval
 setInterval(() => {
+  nodecg.log.debug('Checking for new donations');
   checkForDonations();
 }, EL_UPDATE_INTERVAL * 1000);
