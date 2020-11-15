@@ -50,7 +50,8 @@ export default {
   line-height: 72px;
   height: 100%;
   margin-top: 4px;
-  z-index: 10;
+  z-index: 5;
+  padding-left: 40px;
 }
 #donation-list .donation-list-label {
   display: inline-block;

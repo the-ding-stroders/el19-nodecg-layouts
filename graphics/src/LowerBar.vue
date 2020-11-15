@@ -116,7 +116,7 @@ export default {
   grid-row-gap: 8px;
 
   width: 100%;
-  z-index: 1;
+  z-index: 6;
   font-family: 'agencyfb';
   font-weight: bold;
   background-color: #414042;
@@ -206,6 +206,8 @@ export default {
 .lower-third-grid .charities {
   background: #ffffff;
   text-align: center;
+  padding: 6px;
+  margin-right: 20px;
 }
 .lower-third-grid .charities::before {
   background: linear-gradient(#FFF 55%, #FFF0 55%);
@@ -224,7 +226,7 @@ export default {
   max-width: 100%;
   max-height: 100%;
   /* transform: skew(25deg, 0); */
-  z-index: 2;
+  z-index: 6;
   position: relative;
 }
 .lower-third-grid .charities .arrow-down {

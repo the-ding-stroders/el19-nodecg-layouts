@@ -1,9 +1,9 @@
 <template>
   <div class="donation-alert">
     <div class="new-donation-text">
-      <span>{{ donation.amount }}</span>
+      <span>${{ donation.amount }}</span>
       <span>from</span>
-      <span>{{ donation.name }}</span>
+      <span>{{ donation.displayName }}</span>
     </div>
     <div class="slash-bot-wrapper">
       <div class="slash-bot-animate">
@@ -21,16 +21,14 @@
 <script>
 export default {
   name: 'DonationAlert',
-  data() {
-    return {
-      donation: {},
-    };
-  },
+  data: () => ({
+    donation: {},
+  }),
   mounted() {
     const vm = this;
-    const donationRep = nodecg.Replicant('donations');
-    nodecg.listenFor('donation', () => {
-      vm.donation = donationRep.value;
+    nodecg.listenFor('donationAlert', (newDonations) => {
+      const newDonation = newDonations[0];
+      vm.donation = newDonation;
       vm.showNewDonation();
       setTimeout(() => {
         vm.hideNewDonation();
@@ -47,7 +45,7 @@ export default {
             value: -25, delay: 0, duration: 50,
           },
           scaleX: {
-            value: 170, delay: 50, elasticity: 0, duration: 500, easing: 'easeInExpo',
+            value: 170, delay: 25, elasticity: 0, duration: 500, easing: 'easeInExpo',
           },
           offset: 0,
         })
@@ -57,9 +55,8 @@ export default {
             value: -25, delay: 0, duration: 50,
           },
           scaleX: {
-            value: 170, delay: 50, elasticity: 0, duration: 500, easing: 'easeInCubic',
+            value: 170, delay: 25, elasticity: 0, duration: 500, easing: 'easeInCubic',
           },
-          offset: 250,
         })
         .add({
           targets: '.new-donation-text',
@@ -68,7 +65,6 @@ export default {
             easing: 'linear',
             duration: 250,
           },
-          offset: 750,
         });
     },
     hideNewDonation() {
@@ -89,9 +85,8 @@ export default {
             value: -25, delay: 0, duration: 50,
           },
           scaleX: {
-            value: 0, delay: 50, elasticity: 0, duration: 500, easing: 'easeInExpo',
+            value: 0, delay: 25, elasticity: 0, duration: 500, easing: 'easeInExpo',
           },
-          offset: 250,
         })
         .add({
           targets: '.slash-bot-animate',
@@ -99,9 +94,8 @@ export default {
             value: -25, delay: 0, duration: 50,
           },
           scaleX: {
-            value: 0, delay: 50, elasticity: 0, duration: 500, easing: 'easeInCubic',
+            value: 0, delay: 25, elasticity: 0, duration: 500, easing: 'easeInCubic',
           },
-          offset: 500,
         });
     },
   },
@@ -111,8 +105,8 @@ export default {
 <style scoped>
 .slash-bot-wrapper {
   position: absolute;
-  z-index: 5;
-  margin-left: -20px;
+  z-index: 6;
+  margin-left: -60px;
 }
 .slash-bot-animate {
   position: relative;
@@ -120,14 +114,14 @@ export default {
 }
 .slash-bot {
   background: #7D292A;
-  height: 30px;
+  height: 76px;
   width: 10px;
   margin-left: 10px;
 }
 .slash-top-wrapper {
   position: absolute;
   z-index: 7;
-  margin-left: -20px;
+  margin-left: -60px;
 }
 .slash-top-animate {
   position: relative;
@@ -135,7 +129,7 @@ export default {
 }
 .slash-top {
   background: #fff;
-  height: 30px;
+  height: 76px;
   width: 10px;
   margin-left: 10px;
 }
@@ -147,7 +141,7 @@ export default {
   text-align: center;
   color: #000;
   font-size: 26px;
-  line-height: 28px;
+  line-height: 76px;
   opacity: 0;
 }
 </style>
