@@ -27,18 +27,16 @@ export default {
       return this.donationsLimit ? this.$store.state.donations.slice(0, this.donationsLimit) : this.$store.state.donations;
     },
   },
-  methods: {
-    ...mapActions([
-      'updateDonations',
-    ]),
-  },
   mounted() {
-    const vm = this;
-
     const donationsRep = nodecg.Replicant('donations');
     donationsRep.on('change', () => {
       this.updateDonations();
     });
+  },
+  methods: {
+    ...mapActions([
+      'updateDonations',
+    ]),
   },
 };
 </script>
