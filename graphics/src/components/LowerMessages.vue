@@ -14,6 +14,7 @@
 <script>
 import { eachSeries } from 'async-es';
 import { gsap } from 'gsap';
+import { CSSRulePlugin } from 'gsap/CSSRulePlugin';
 
 export default {
   name: 'LowerMessages',
@@ -35,6 +36,7 @@ export default {
     };
   },
   created() {
+    gsap.registerPlugin(CSSRulePlugin);
     this.populateSchedule();
   },
   mounted() {
@@ -62,10 +64,18 @@ export default {
       return tl;
     },
     hideLabel(tl) {
+      const rule = CSSRulePlugin.getRule('.lower-third-grid .messages::before');
       tl.to({}, 0.03, {});
       tl.to('.label', 0.3, {
         autoAlpha: 0,
         display: 'none',
+        ease: 'linear',
+      });
+      tl.to(rule, 0.3, {
+        cssRule: {
+          backgroundColor: '#939598',
+          width: '219px',
+        },
         ease: 'linear',
       });
       return tl;
@@ -187,11 +197,19 @@ export default {
     showLabel(text, color = '#E8FF51') {
       const vm = this;
       const showLabel = gsap.timeline();
+      const rule = CSSRulePlugin.getRule('.lower-third-grid .messages::before');
       const { scrollHoldDuration } = vm.$data;
 
       vm.$data.message.label = text;
 
       showLabel.to({}, 0.03, {});
+      showLabel.to(rule, 0.3, {
+        cssRule: {
+          backgroundColor: '#E8FF51',
+          width: '210px',
+        },
+        ease: 'linear',
+      });
       showLabel.to('.label', 0.5, {
         autoAlpha: 1,
         display: 'inline-block',
