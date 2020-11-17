@@ -1,9 +1,9 @@
 <template>
   <div class="donation-alert">
     <div class="new-donation-text">
-      <span>${{ donation.amount }}</span>
+      <span>${{ currentDonation.amount }}</span>
       <span>from</span>
-      <span>{{ donation.displayName }}</span>
+      <span>{{ currentDonation.displayName }}</span>
     </div>
     <div class="slash-bot-wrapper">
       <div class="slash-bot-animate">
@@ -22,40 +22,84 @@
 export default {
   name: 'DonationAlert',
   data: () => ({
-    donation: {},
+    currentDonation: {},
+    donationsQueue: [],
+    newDonations: false,
   }),
+  watch: {
+    donationsQueue(value) {
+      // If items were added to the queue, set the newDonations to true, then...
+      if (Array.isArray(value) && value.length > 0) {
+        this.newDonations = true;
+      }
+    },
+    newDonations(value) {
+      // ...run the nextDonation function to start the animation timeline.
+      const vm = this;
+
+      if (value === true) {
+        vm.nextDonation();
+      }
+    },
+  },
   mounted() {
     const vm = this;
-    nodecg.listenFor('donationAlert', (newDonations) => {
-      const newDonation = newDonations[0];
-      vm.donation = newDonation;
-      vm.showNewDonation();
-      setTimeout(() => {
-        vm.hideNewDonation();
-      }, 5000);
+    nodecg.listenFor('donationAlert', (results) => {
+      const localDonations = JSON.parse(JSON.stringify(vm.donationsQueue));
+      const incomingDonations = JSON.parse(JSON.stringify(results));
+      // eslint-disable-next-line max-len
+      const donationDiff = incomingDonations.filter((inc) => !localDonations.some((loc) => inc.donationID === loc.donationID));
+
+      if (donationDiff.length > 0) {
+        vm.donationsQueue = vm.donationsQueue.concat(donationDiff);
+      }
     });
   },
   methods: {
-    showNewDonation() {
+    nextDonation() {
       const vm = this;
-      vm.$anime.timeline()
+
+      // If the queue is empty, end the cycle.
+      if (vm.donationsQueue.length === 0) {
+        vm.newDonations = false;
+        return;
+      }
+
+      // Grab the first item in the array and show it
+      const newDonation = JSON.parse(JSON.stringify(vm.donationsQueue[0]));
+      vm.showNewDonation(newDonation, () => {
+        // Remove the item we just showed and call this function again
+        vm.donationsQueue.shift();
+        vm.nextDonation();
+      });
+    },
+    showNewDonation(donation, callback) {
+      const vm = this;
+      const timeline = vm.$anime.timeline({
+        begin() {
+          vm.currentDonation = donation;
+        },
+        complete() {
+          vm.currentDonation = {};
+          callback();
+        },
+      })
         .add({
           targets: '.slash-bot-animate',
           skewX: {
-            value: -25, delay: 0, duration: 50,
+            value: -25, delay: 0, duration: 25,
           },
           scaleX: {
-            value: 170, delay: 25, elasticity: 0, duration: 500, easing: 'easeInExpo',
+            value: 170, delay: 25, elasticity: 0, duration: 250, easing: 'easeInExpo',
           },
-          offset: 0,
         })
         .add({
           targets: '.slash-top-animate',
           skewX: {
-            value: -25, delay: 0, duration: 50,
+            value: -25, delay: 0, duration: 25,
           },
           scaleX: {
-            value: 170, delay: 25, elasticity: 0, duration: 500, easing: 'easeInCubic',
+            value: 170, delay: 25, elasticity: 0, duration: 250, easing: 'easeInCubic',
           },
         })
         .add({
@@ -63,13 +107,9 @@ export default {
           opacity: {
             value: 1,
             easing: 'linear',
-            duration: 250,
+            duration: 750,
           },
-        });
-    },
-    hideNewDonation() {
-      const vm = this;
-      vm.$anime.timeline()
+        })
         .add({
           targets: '.new-donation-text',
           opacity: {
@@ -77,26 +117,27 @@ export default {
             easing: 'linear',
             duration: 250,
           },
-          offset: 0,
-        })
+        }, '+=5000')
         .add({
           targets: '.slash-top-animate',
           skewX: {
-            value: -25, delay: 0, duration: 50,
+            value: -25, delay: 0, duration: 25,
           },
           scaleX: {
-            value: 0, delay: 25, elasticity: 0, duration: 500, easing: 'easeInExpo',
+            value: 0, elasticity: 0, duration: 250, easing: 'easeInExpo',
           },
         })
         .add({
           targets: '.slash-bot-animate',
           skewX: {
-            value: -25, delay: 0, duration: 50,
+            value: -25, delay: 0, duration: 25,
           },
           scaleX: {
-            value: 0, delay: 25, elasticity: 0, duration: 500, easing: 'easeInCubic',
+            value: 0, elasticity: 0, duration: 250, easing: 'easeInCubic',
           },
         });
+
+      timeline.finished.then();
     },
   },
 };

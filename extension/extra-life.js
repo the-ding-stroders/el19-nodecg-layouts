@@ -27,13 +27,13 @@ function checkForDonations() {
 
     if (newDonationsCheck === true) {
       // Get the new donations that aren't known by us yet
-      const newDonations = [elDonations, knownDonations].sort((a, b) => b.length - a.length)
-        .reduce((a, b) => a.filter((o) => !b.some((v) => v.id === o.id)));
+      const newDonations = [elDonations, knownDonations].sort((e, k) => k.length - e.length)
+        .reduce((e, k) => e.filter((o) => !k.some((v) => v.id === o.id)));
 
       // Update our known donations with what Extra Life sent
       donationRep.value = elDonations;
       extraLife.getTeam(TEAM_ID).then((teamInfoResults) => {
-        // Update the team's total value and send out some notifications
+        // Update the team's total value and send out notifications
         totalRep.value = teamInfoResults.sumDonations;
         nodecg.sendMessage('donationAlert', newDonations);
         Object.values(newDonations).forEach((newDonation) => {
@@ -55,7 +55,7 @@ function checkForDonations() {
               return;
             }
 
-            nodecg.log.info(result);
+            nodecg.log.trace(result);
           });
         });
       });

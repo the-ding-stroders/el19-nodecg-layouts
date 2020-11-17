@@ -34,6 +34,7 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars, import/extensions
 import Odometer from 'odometer/odometer.min.js';
 import IOdometer from 'vue-odometer';
 import CharityLogos from './components/CharityLogos.vue';
@@ -60,9 +61,8 @@ export default {
   mounted() {
     const vm = this;
     const fundGoalRep = nodecg.Replicant('fundraisingGoal');
-    const totalRep = nodecg.Replicant('total');
 
-    fundGoalRep.on('change', (newValue) => {
+    fundGoalRep.on('change', () => {
       nodecg.readReplicant('fundraisingGoal', (value) => {
         vm.fundraisingGoal = value;
       });
@@ -216,7 +216,7 @@ export default {
   bottom: 0;
   right: -40px;
   position: absolute;
-  z-index: 0;
+  z-index: 6;
   transform: skewX(195deg);
   transform-origin: bottom;
   width: 368px;
