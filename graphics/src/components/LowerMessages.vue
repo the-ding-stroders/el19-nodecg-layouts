@@ -217,11 +217,11 @@ export default {
 </script>
 
 <style scoped>
-div, /deep/ div {
+div, ::v-deep div {
   display: inline-block;
   height: 100%;
 }
-.label, /deep/ .label {
+.label, ::v-deep .label {
   /* background-color: #E8FF51; */
   /* margin: 0px 0 0 -24px; */
   padding: 0 10px 0 12px;
