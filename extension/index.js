@@ -18,8 +18,6 @@ module.exports = function (nodecg) {
   require('./webpack-graphics');
 
   // Other extension files we need to load.
-  // require('./discord');
-  // require('./donations');
   require('./extra-life');
   require('./twitch');
   require('./music');
