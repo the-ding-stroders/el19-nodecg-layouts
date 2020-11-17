@@ -50,7 +50,7 @@ export default {
     });
   },
   methods: {
-    visibilityChanged(isVisible, entry) {
+    visibilityChanged(isVisible) {
       this.isVisible = isVisible;
     },
     hideContent(tl) {
@@ -62,8 +62,6 @@ export default {
       return tl;
     },
     hideLabel(tl) {
-      const hideLabel = gsap.timeline();
-
       tl.to({}, 0.03, {});
       tl.to('.label', 0.3, {
         autoAlpha: 0,
@@ -75,7 +73,7 @@ export default {
     populateMessages() {
       const vm = this;
 
-      const ctaRep = nodecg.readReplicant('ctamessages', 'tds-2020-layouts', (ctas) => {
+      nodecg.readReplicant('ctamessages', 'tds-2020-layouts', (ctas) => {
         vm.$data.ctaMessages = [];
         eachSeries(ctas, (cta, callback) => {
           if (cta.active === true) {
@@ -162,7 +160,7 @@ export default {
 
       return tl;
     },
-    showCTA(message) {
+    showCTA() {
       const vm = this;
       const tl = gsap.timeline();
       const messages = vm.ctaMessages;
