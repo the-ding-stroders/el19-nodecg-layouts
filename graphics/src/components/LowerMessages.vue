@@ -29,8 +29,8 @@ export default {
       labelVisible: false,
       ctaMessages: [],
       schedule: {
-        current: ' ',
-        next: ' ',
+        current: null,
+        next: null,
       },
       scrollHoldDuration: 5,
     };
@@ -99,22 +99,31 @@ export default {
       const vm = this;
 
       nodecg.readReplicant('schedule', 'tds-2020-layouts', (schedule) => {
-        nodecg.readReplicant('schedTake', 'tds-2020-layouts', (schedIndexes) => {
-          const schedCurrent = schedule[schedIndexes.current];
-          const schedNext = schedule[schedIndexes.next];
+        // Continue if schedule is not completely empty
+        if (schedule.length > 0) {
+          nodecg.readReplicant('schedTake', 'tds-2020-layouts', (schedIndexes) => {
+            const schedCurrent = schedule[schedIndexes.current];
+            const schedNext = schedule[schedIndexes.next];
 
-          if (schedCurrent.customTitle) {
-            vm.schedule.current = `${schedCurrent.customTitle} (${schedCurrent.category.name})`;
-          } else {
-            vm.schedule.current = schedCurrent.category.name;
-          }
+            if (Object.keys(schedCurrent).length >= 0 && schedCurrent.constructor === Object) {
+              nodecg.log.info('schedCurrent not empty');
+              if (schedCurrent.customTitle) {
+                vm.schedule.current = `${schedCurrent.customTitle} (${schedCurrent.category.name})`;
+              } else {
+                vm.schedule.current = schedCurrent.category.name;
+              }
+            }
 
-          if (schedNext.customTitle) {
-            vm.schedule.next = `${schedNext.customTitle} (${schedNext.category.name})`;
-          } else {
-            vm.schedule.next = schedNext.category.name;
-          }
-        });
+            if (Object.keys(schedNext).length >= 0 && schedNext.constructor === Object) {
+              nodecg.log.info('schedNext not empty');
+              if (schedNext.customTitle) {
+                vm.schedule.next = `${schedNext.customTitle} (${schedNext.category.name})`;
+              } else {
+                vm.schedule.next = schedNext.category.name;
+              }
+            }
+          });
+        }
       });
     },
     processNextPart() {
@@ -143,9 +152,15 @@ export default {
       vm.populateMessages();
       vm.parts = [
         vm.showCTA,
-        vm.showCurrent,
-        vm.showUpNext,
       ];
+
+      if (typeof vm.showCurrent === 'undefined' || vm.showCurrent === null) {
+        vm.parts.push(vm.showCurrent);
+      }
+
+      if (typeof vm.showUpNext === 'undefined' || vm.showUpNext === null) {
+        vm.parts.push(vm.showUpNext);
+      }
 
       vm.processNextPart();
     },
@@ -240,6 +255,7 @@ div, ::v-deep div {
 .label, ::v-deep .label {
   /* background-color: #E8FF51; */
   /* margin: 0px 0 0 -24px; */
+  display: none;
   padding: 0 10px 0 12px;
   opacity: 0;
   width: 172px;
@@ -266,5 +282,10 @@ div, ::v-deep div {
   z-index: -1;
   transform: skewX(195deg);
   transform-origin: bottom;
+}
+
+.lower-third-grid .messages::before {
+  background: '#939598';
+  width: '219px';
 }
 </style>
