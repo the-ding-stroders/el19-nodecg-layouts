@@ -85,6 +85,7 @@ export default {
       const timeline = vm.$anime.timeline({
         begin() {
           vm.currentDonation = donation;
+          nodecg.playSound('donation-alert');
         },
         complete() {
           vm.currentDonation = {};

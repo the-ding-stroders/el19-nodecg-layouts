@@ -110,6 +110,12 @@
           "png"
         ]
       }
+    ],
+    "soundCues": [
+      {
+        "name": "donation-alert",
+        "defaultFile": "sounds/blue-coin.mp3"
+      }
     ]
   },
   "repository": "https://github.com/nodecg/nodecg.git",
