@@ -23,6 +23,7 @@ export default {
   name: 'DonationAlert',
   data: () => ({
     currentDonation: {},
+    donationDisplayTime: null,
     donationsQueue: [],
     newDonations: false,
   }),
@@ -41,6 +42,12 @@ export default {
         vm.nextDonation();
       }
     },
+  },
+  created() {
+    const vm = this;
+    nodecg.readReplicant('settings', (value) => {
+      vm.donationDisplayTime = value.donationDisplayTime.value;
+    });
   },
   mounted() {
     const vm = this;
@@ -75,8 +82,6 @@ export default {
     },
     showNewDonation(donation, callback) {
       const vm = this;
-      const settingsRep = nodecg.Replicant('settings').value;
-      const donationDisplay = settingsRep.donationDisplayTime.value;
       const timeline = vm.$anime.timeline({
         begin() {
           vm.currentDonation = donation;
@@ -119,7 +124,7 @@ export default {
             easing: 'linear',
             duration: 250,
           },
-        }, `+=${donationDisplay}`)
+        }, `+=${vm.donationDisplayTime}`)
         .add({
           targets: '.slash-top-animate',
           skewX: {
