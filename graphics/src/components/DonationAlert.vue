@@ -75,6 +75,8 @@ export default {
     },
     showNewDonation(donation, callback) {
       const vm = this;
+      const settingsRep = nodecg.Replicant('settings').value;
+      const donationDisplay = settingsRep.donationDisplayTime.value;
       const timeline = vm.$anime.timeline({
         begin() {
           vm.currentDonation = donation;
@@ -117,7 +119,7 @@ export default {
             easing: 'linear',
             duration: 250,
           },
-        }, '+=5000')
+        }, `+=${donationDisplay}`)
         .add({
           targets: '.slash-top-animate',
           skewX: {

@@ -204,47 +204,43 @@ module.exports = [
       modules: [nodeModulesPath, bowerModulesPath],
     },
   },
-  // {
-  //   entry: dashJsPath + 'src/streamers.js',
-  //   mode: "development",
-  //   module: {
-  //     rules: [
-  //       {
-  //         test: /\.css$/,
-  //         use: [
-  //           'style-loader',
-  //           'css-loader'
-  //         ]
-  //       },
-  //       {
-  //         test: /\.vue$/,
-  //         loader: 'vue-loader'
-  //       },
-  //       {
-  //         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
-  //         loader: 'url-loader?limit=100000'
-  //       }
-  //     ]
-  //   },
-  //   output: {
-  //     path: dashJsPath + 'dist',
-  //     filename: 'streamers.bundle.js'
-  //   },
-  //   plugins: [
-  //     new HtmlWebpackPlugin({
-  //       template: dashJsPath + 'src/dashboard.ejs',
-  //       filename: dashJsPath + 'streamers.html'
-  //     }),
-  //     new VueLoaderPlugin()
-  //   ],
-  //   resolve: {
-  //     extensions: ['.js', '.vue', '.json'],
-  //     alias: {
-  //       'vue$': 'vue/dist/vue.esm.js'
-  //     }
-  //   },
-  //   resolveLoader: {
-  //     modules: [ nodeModulesPath, bowerModulesPath ]
-  //   }
-  // }
+  {
+    entry: `${dashJsPath}src/settings.js`,
+    mode: 'development',
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            'style-loader',
+            'css-loader',
+          ],
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+        },
+      ],
+    },
+    output: {
+      path: `${dashJsPath}dist`,
+      filename: 'settings.bundle.js',
+    },
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: `${dashJsPath}src/dashboard.ejs`,
+        filename: `${dashJsPath}settings.html`,
+      }),
+      new VueLoaderPlugin(),
+    ],
+    resolve: {
+      extensions: ['.js', '.vue', '.json'],
+      alias: {
+        vue$: 'vue/dist/vue.esm.js',
+      },
+    },
+    resolveLoader: {
+      modules: [nodeModulesPath, bowerModulesPath],
+    },
+  },
 ];

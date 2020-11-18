@@ -52,9 +52,16 @@
         "workspace": "Overview"
       },
       {
+        "name": "settings",
+        "title": "TDS Layouts Settings",
+        "width": 3,
+        "file": "settings.html",
+        "workspace": "Setup"
+      },
+      {
         "name": "logo-selector",
         "title": "Logo Selector",
-        "width": 7,
+        "width": 6,
         "file": "logo-selector.html",
         "workspace": "Setup"
       },

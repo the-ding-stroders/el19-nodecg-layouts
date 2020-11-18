@@ -36,28 +36,29 @@ function checkForDonations() {
         // Update the team's total value and send out notifications
         totalRep.value = teamInfoResults.sumDonations;
         nodecg.sendMessage('donationAlert', newDonations);
-        Object.values(newDonations).forEach((newDonation) => {
-          nodecg.sendMessageToBundle('postDiscordMessage', 'nodecg-shout-dis', {
-            title: 'New Extra Life Donation!',
-            content: `$${newDonation.amount} from ${newDonation.displayName}!`,
-            color: '#E8FF51',
-            fields: [
-              {
-                name: 'Donation Recipient',
-                value: newDonation.recipientName,
-              },
-            ],
-            thumbnail: `https:${newDonation.avatarImageURL}`,
-            timestamp: newDonation.createdDateUTC,
-          }, (error, result) => {
-            if (error) {
-              nodecg.log.error(error);
-              return;
-            }
-
-            nodecg.log.trace(result);
+        if (settingsRep.discordAlertsEnabled.value === true) {
+          Object.values(newDonations).forEach((newDonation) => {
+            nodecg.sendMessageToBundle('postDiscordMessage', 'nodecg-shout-dis', {
+              title: 'New Extra Life Donation!',
+              content: `$${newDonation.amount} from ${newDonation.displayName}!`,
+              color: '#E8FF51',
+              fields: [
+                {
+                  name: 'Donation Recipient',
+                  value: newDonation.recipientName,
+                },
+              ],
+              thumbnail: `https:${newDonation.avatarImageURL}`,
+              timestamp: newDonation.createdDateUTC,
+            }, (error, result) => {
+              if (error) {
+                nodecg.log.error(error);
+                return;
+              }
+              nodecg.log.trace(result);
+            });
           });
-        });
+        }
       });
     }
   });

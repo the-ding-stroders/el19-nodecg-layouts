@@ -18,6 +18,7 @@ module.exports = function (nodecg) {
   require('./webpack-graphics');
 
   // Other extension files we need to load.
+  require('./settings');
   require('./extra-life');
   require('./twitch');
   require('./music');
