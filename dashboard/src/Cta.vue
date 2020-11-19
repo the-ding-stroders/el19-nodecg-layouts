@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/valid-v-slot -->
   <div id="app">
     <v-app>
       <v-container
@@ -56,16 +57,84 @@
         >
           <v-flex xs12>
             <v-data-table
+              v-model="selected"
               :headers="headers"
               :items="ctaMessages"
               hide-default-footer
+              item-key="id"
+              show-select
               class="elevation-1"
             >
-              <template #items="props">
-                <td>{{ props.item.content }}</td>
-                <td>{{ props.item.active }}</td>
-                <td>{{ props.item.id }}</td>
+              <template #item.content="{ item }">
+                <td v-if="editingItem.id === item.id">
+                  <v-text-field
+                    v-model="editingItem.content"
+                    label="Message text"
+                    placeholder="Message text"
+                    single-line
+                  />
+                </td>
+                <td v-else>
+                  {{ item.content }}
+                </td>
               </template>
+
+              <template #item.active="{ item }">
+                <v-checkbox
+                  v-if="editingItem.id === item.id"
+                  v-model="editingItem.active"
+                />
+                <v-checkbox
+                  v-else
+                  v-model="item.active"
+                  disabled
+                />
+              </template>
+
+              <template
+                #item.actions="{ item }"
+              >
+                <v-btn
+                  v-if="editingItem.id !== item.id"
+                  color="success"
+                  :disabled="editingItem.id === item.id || selected.length > 0"
+                  @click="editItem(item)"
+                >
+                  <v-icon dark>
+                    mdi-pencil
+                  </v-icon>
+                </v-btn>
+                <v-btn
+                  v-if="editingItem.id !== item.id"
+                  color="error"
+                  :disabled="editingItem.id === item.id || selected.length > 0"
+                  @click="deleteItem(item)"
+                >
+                  <v-icon dark>
+                    mdi-delete
+                  </v-icon>
+                </v-btn>
+                <v-btn
+                  v-if="editingItem.id === item.id"
+                  color="success"
+                  @click="saveItem(item)"
+                >
+                  <v-icon dark>
+                    mdi-check
+                  </v-icon>
+                  Save
+                </v-btn>
+                <v-btn
+                  v-if="editingItem.id === item.id"
+                  @click="closeItem(item)"
+                >
+                  <v-icon dark>
+                    mdi-close-circle
+                  </v-icon>
+                  Cancel
+                </v-btn>
+              </template>
+
               <template #no-data>
                 <v-alert
                   type="info"
@@ -86,6 +155,7 @@ export default {
   name: 'App',
   data: () => ({
     ctaMessages: [],
+    editingItem: {},
     headers: [
       {
         text: 'Message Content',
@@ -98,23 +168,28 @@ export default {
         value: 'active',
       },
       {
-        text: 'ID (Time Created)',
-        value: 'id',
+        text: 'Actions',
+        sortable: false,
+        value: 'actions',
       },
     ],
     newActive: true,
     newContent: '',
+    selected: [],
   }),
   watch: {
-    ctaMessages(newCtaMessage) {
-      const ctaRep = nodecg.Replicant('ctamessages', 'tds-2020-layouts', { defaultValue: [] });
-      ctaRep.value = newCtaMessage;
+    ctaMessages: {
+      deep: true,
+      handler(newCtaMessage) {
+        const ctaRep = nodecg.Replicant('ctamessages', 'tds-2020-layouts', { defaultValue: [] });
+        ctaRep.value = newCtaMessage;
+      },
     },
   },
   mounted() {
     const vm = this;
     nodecg.Replicant('ctamessages', 'tds-2020-layouts', { defaultValue: [] });
-    const ctaRep = nodecg.readReplicant('ctamessages', 'tds-2020-layouts', (value) => {
+    nodecg.readReplicant('ctamessages', 'tds-2020-layouts', (value) => {
       vm.$data.ctaMessages = value;
     });
   },
@@ -138,10 +213,36 @@ export default {
       vm.$data.ctaMessages.push(newCTA);
       vm.clearForm();
     },
+    closeItem() {
+      const vm = this;
+
+      vm.editingItem = {};
+    },
     clearForm() {
       const vm = this;
       vm.$refs.form.reset();
       vm.$data.newActive = true;
+    },
+    deleteItem(item) {
+      const vm = this;
+      const itemIndex = this.getItemIndex(item.id);
+
+      vm.ctaMessages.splice(itemIndex, 1);
+    },
+    editItem(item) {
+      const vm = this;
+      vm.editingItem = JSON.parse(JSON.stringify(item));
+    },
+    getItemIndex(itemId) {
+      const vm = this;
+      return vm.ctaMessages.findIndex((x) => x.id === itemId);
+    },
+    saveItem(item) {
+      const vm = this;
+      const itemIndex = this.getItemIndex(item.id);
+
+      Object.assign(vm.ctaMessages[itemIndex], vm.editingItem);
+      this.closeItem();
     },
   },
 };
