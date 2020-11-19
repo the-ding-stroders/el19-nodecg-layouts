@@ -29,8 +29,8 @@ export default {
       labelVisible: false,
       ctaMessages: [],
       schedule: {
-        current: null,
-        next: null,
+        current: '',
+        next: '',
       },
       scrollHoldDuration: 5,
     };
@@ -105,18 +105,18 @@ export default {
             const schedCurrent = schedule[schedIndexes.current];
             const schedNext = schedule[schedIndexes.next];
 
-            if (Object.keys(schedCurrent).length >= 0 && schedCurrent.constructor === Object) {
+            if (schedCurrent && schedCurrent !== null && schedCurrent.constructor === Object) {
               nodecg.log.info('schedCurrent not empty');
-              if (schedCurrent.customTitle) {
+              if (schedCurrent.customTitle && schedCurrent.customTitle !== null) {
                 vm.schedule.current = `${schedCurrent.customTitle} (${schedCurrent.category.name})`;
               } else {
                 vm.schedule.current = schedCurrent.category.name;
               }
             }
 
-            if (Object.keys(schedNext).length >= 0 && schedNext.constructor === Object) {
+            if (schedNext && schedNext !== null && schedNext.constructor === Object) {
               nodecg.log.info('schedNext not empty');
-              if (schedNext.customTitle) {
+              if (schedNext.customTitle && schedNext.customTitle !== null) {
                 vm.schedule.next = `${schedNext.customTitle} (${schedNext.category.name})`;
               } else {
                 vm.schedule.next = schedNext.category.name;
@@ -154,11 +154,11 @@ export default {
         vm.showCTA,
       ];
 
-      if (typeof vm.showCurrent === 'undefined' || vm.showCurrent === null) {
+      if (typeof vm.schedule.current !== 'undefined' && vm.schedule.current !== null && vm.schedule.current.length > 0) {
         vm.parts.push(vm.showCurrent);
       }
 
-      if (typeof vm.showUpNext === 'undefined' || vm.showUpNext === null) {
+      if (typeof vm.schedule.next !== 'undefined' && vm.schedule.next !== null && vm.schedule.next.length > 0) {
         vm.parts.push(vm.showUpNext);
       }
 
