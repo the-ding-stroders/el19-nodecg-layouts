@@ -8,6 +8,12 @@
     "NodeCG": "readonly"
   },
   "rules": {
-    "global-require": "off"
+    "global-require": "off",
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allowAfterThis": true
+      }
+    ]
   }
 }

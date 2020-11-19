@@ -68,10 +68,10 @@
                           <v-flex xs12>
                             <v-autocomplete
                               v-model="schedItem.category"
-                              v-model:search-input="search"
                               :filter="customFilter"
                               :items="items"
                               :loading="isLoading"
+                              :search-input.sync="search"
                               :mandatory="true"
                               hide-no-data
                               item-text="name"
@@ -133,6 +133,7 @@
                       </v-chip>
                     </td>
                     <td v-else />
+                    <!-- eslint-disable-next-line max-len -->
                     <td v-if="currentIndex !== currentIndexLive && (currentIndex === index || nextIndex === index)">
                       <v-chip
                         class="ma-2"
@@ -250,19 +251,21 @@ export default {
       },
     });
     nodecg.readReplicant('schedTake', 'tds-2020-layouts', (schedTake) => {
-      this.currentIndex = this.currentIndexLive = schedTake.current;
-      this.nextIndex = this.nextIndexLive = schedTake.next;
+      this.currentIndex = schedTake.current;
+      this.currentIndexLive = schedTake.current;
+      this.nextIndex = schedTake.next;
+      this.nextIndexLive = schedTake.next;
     });
   },
   methods: {
     close() {
       this.dialog = false;
-      this.schedItem = { ...this.defaultItem };
+      this.schedItem = { ...this.defaultItem};
       this.editedIndex = -1;
       this.search = null;
     },
-    customFilter(item, queryText, itemText) {
-      if (queryText < 4) return false;
+    customFilter(item, queryText) {
+      if(queryText < 4) return false;
       return queryText;
     },
     deleteItem(index) {
@@ -272,7 +275,7 @@ export default {
     },
     editItem(index) {
       this.editedIndex = index;
-      this.schedItem = { ...this.schedItems[index] };
+      this.schedItem = { ...this.schedItems[index]};
       this.search = this.schedItem.category.name;
       this.dialog = true;
     },
@@ -295,34 +298,40 @@ export default {
     getChipColor(liveOrDeck, index) {
       if (liveOrDeck === 'deck') {
         if (index === this.currentIndex) {
-          return 'rgba(0, 100, 0, 1)';
+          return 'rgba(0, 100, 0, 1)'
+        } else {
+          return 'rgba(255, 140, 0, 1)'
         }
-        return 'rgba(255, 140, 0, 1)';
+      } else {
+        if (index === this.currentIndexLive) {
+          return 'rgba(0, 100, 0, 1)'
+        } else {
+          return 'rgba(255, 140, 0, 1)'
+        }
       }
-      if (index === this.currentIndexLive) {
-        return 'rgba(0, 100, 0, 1)';
-      }
-      return 'rgba(255, 140, 0, 1)';
     },
     getChipText(liveOrDeck, index) {
       if (liveOrDeck === 'deck') {
         if (index === this.currentIndex) {
-          return 'current';
+          return 'current'
+        } else {
+          return 'next'
         }
-        return 'next';
+      } else {
+        if (index === this.currentIndexLive) {
+          return 'current'
+        } else {
+          return 'next'
+        }
       }
-      if (index === this.currentIndexLive) {
-        return 'current';
-      }
-      return 'next';
     },
     goNext() {
-      this.currentIndex++;
-      this.nextIndex++;
+      this.currentIndex += 1;
+      this.nextIndex += 1;
     },
     goPrev() {
-      this.currentIndex--;
-      this.nextIndex--;
+      this.currentIndex -= 1;
+      this.nextIndex -= 1;
     },
     save() {
       const schedArr = JSON.parse(JSON.stringify(this.schedItems));
@@ -336,8 +345,10 @@ export default {
     },
     takeItems() {
       const schedTakeRep = nodecg.Replicant('schedTake', 'tds-2020-layouts');
-      schedTakeRep.value.current = this.currentIndexLive = this.currentIndex;
-      schedTakeRep.value.next = this.nextIndexLive = this.nextIndex;
+      schedTakeRep.value.current = this.currentIndex;
+      this.currentIndexLive = this.currentIndex;
+      schedTakeRep.value.next = this.nextIndex;
+      this.nextIndexLive = this.nextIndex;
     },
   },
 };
