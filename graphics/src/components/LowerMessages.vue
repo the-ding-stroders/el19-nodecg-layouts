@@ -104,9 +104,11 @@ export default {
           nodecg.readReplicant('schedTake', 'tds-2020-layouts', (schedIndexes) => {
             const schedCurrent = schedule[schedIndexes.current];
             const schedNext = schedule[schedIndexes.next];
+            // Reset local schedule items
+            vm.schedule.current = '';
+            vm.schedule.next = '';
 
             if (schedCurrent && schedCurrent !== null && schedCurrent.constructor === Object) {
-              nodecg.log.info('schedCurrent not empty');
               if (schedCurrent.customTitle && schedCurrent.customTitle !== null) {
                 vm.schedule.current = `${schedCurrent.customTitle} (${schedCurrent.category.name})`;
               } else {
@@ -115,7 +117,6 @@ export default {
             }
 
             if (schedNext && schedNext !== null && schedNext.constructor === Object) {
-              nodecg.log.info('schedNext not empty');
               if (schedNext.customTitle && schedNext.customTitle !== null) {
                 vm.schedule.next = `${schedNext.customTitle} (${schedNext.category.name})`;
               } else {
