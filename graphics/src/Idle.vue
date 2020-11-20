@@ -137,6 +137,7 @@
 </template>
 
 <script>
+import { gsap } from 'gsap';
 import CharityLogos from './components/CharityLogos.vue';
 import TDSLogo from './components/TDSLogo.vue';
 
@@ -175,6 +176,40 @@ export default {
         jQuery('#circle').fitText(3);
       });
     });
+
+    vm.rotateHeart();
+  },
+  methods: {
+    rotateHeart() {
+      const element = '.heart-inner img';
+      const minRotate = 2;
+      const maxRotate = 5;
+      const minTime = 10;
+      const maxTime = 20;
+      const randomTime = Math.floor(Math.random() * (maxTime - minTime + 1) + minTime);
+      const rotations = Math.floor(Math.random() * (maxRotate - minRotate + 1) + minRotate);
+      const timeline = gsap.timeline({ paused: true });
+      const vm = this;
+
+      timeline.set(element, { rotationY: 0 });
+      timeline.to(element, {
+        duration: 0.25,
+        y: 25,
+      });
+      timeline.to(element, {
+        duration: 0.25,
+        ease: 'back.out(4)',
+        y: 0,
+      });
+      timeline.to(element, {
+        rotateY: 360 * rotations,
+        duration: 2,
+        ease: 'power4.easeInOut',
+      }, '-=0.25');
+      timeline.play();
+
+      setTimeout(vm.rotateHeart, randomTime * 1000);
+    },
   },
 };
 </script>
