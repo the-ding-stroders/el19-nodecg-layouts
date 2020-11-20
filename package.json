@@ -126,6 +126,7 @@
   "dependencies": {
     "@bower_components/jquery": "jquery/jquery-dist#^3.3.1",
     "@bower_components/jquery-animateNumber": "aishek/jquery-animateNumber#^0.0.14",
+    "@bower_components/jquery-fittext": "davatron5000/FitText.js",
     "@bower_components/jquery-textfill": "jquery-textfill/jquery-textfill#^0.6.0",
     "@bower_components/jquery-ui": "components/jqueryui#^1.12.1",
     "@bower_components/letteringjs": "davatron5000/Lettering.js#^0.7.0",

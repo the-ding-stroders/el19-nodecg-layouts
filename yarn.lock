@@ -29,6 +29,10 @@
   dependencies:
     jquery ">= 1.7.0"
 
+"@bower_components/jquery-fittext@davatron5000/FitText.js":
+  version "0.0.0"
+  resolved "https://codeload.github.com/davatron5000/FitText.js/tar.gz/0b4183afb4c3fda73151da2204926d7cb92a7872"
+
 "@bower_components/jquery-textfill@jquery-textfill/jquery-textfill#^0.6.0":
   version "0.0.0"
   resolved "https://codeload.github.com/jquery-textfill/jquery-textfill/tar.gz/a1c1f2918b0e6615844cf98a1644d7856bc2fbda"

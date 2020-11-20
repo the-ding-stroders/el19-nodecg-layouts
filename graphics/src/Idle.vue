@@ -1,6 +1,49 @@
 <template>
   <div id="app">
-    <div class="text-circle" />
+    <div id="container">
+      <div id="circle">
+        <svg
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          x="0px"
+          y="0px"
+          width="600px"
+          height="600px"
+          viewBox="0 0 600 600"
+          enable-background="new 0 0 600 600"
+          xml:space="preserve"
+        >
+          <defs>
+            <path
+              id="circlePath"
+              d="M 127, 127
+                a 242 242, 0 1,1 -1,1"
+            />
+          </defs>
+          <circle
+            cx="300"
+            cy="300"
+            r="300"
+            fill="#ffffff"
+          />
+          <g>
+            <use
+              xlink:href="#circlePath"
+              fill="none"
+            />
+            <text fill="#000">
+              <textPath
+                id="idle-message"
+                xlink:href="#circlePath"
+              >
+                {{ idleMessage }}
+              </textPath>
+            </text>
+          </g>
+        </svg>
+      </div>
+    </div>
     <div class="logo-outer">
       <div class="logo-inner">
         <TDSLogo />
@@ -103,6 +146,36 @@ export default {
     CharityLogos,
     TDSLogo,
   },
+  data: () => ({
+    idleMessage: '',
+  }),
+  created() {
+    const vm = this;
+    const settingsRep = nodecg.Replicant('settings');
+
+    NodeCG.waitForReplicants(settingsRep).then(() => {
+      vm.idleMsg = settingsRep.value.idleScreenMsg.value;
+
+      settingsRep.on('change', (newValue) => {
+        vm.idleMessage = newValue.idleScreenMsg.value;
+      });
+    });
+  },
+  mounted() {
+    const vm = this;
+    const settingsRep = nodecg.Replicant('settings');
+
+    NodeCG.waitForReplicants(settingsRep).then(() => {
+      vm.idleMsg = settingsRep.value.idleScreenMsg.value;
+
+      settingsRep.on('change', (newValue) => {
+        vm.idleMessage = newValue.idleScreenMsg.value;
+
+        // eslint-disable-next-line no-undef
+        jQuery('#circle').fitText(3);
+      });
+    });
+  },
 };
 </script>
 
@@ -123,8 +196,6 @@ export default {
   display: grid;
   grid-template-columns: 1920px;
   grid-template-rows: 36px 35px 36px 37px 134px 87px 36px 35px 134px 98px 36px 47px 134px 37px 36px;
-  /* grid-column-gap: 8px; */
-  /* grid-row-gap: 10px; */
   width: 100%;
   z-index: 1;
   box-sizing: border-box;
@@ -188,16 +259,6 @@ export default {
 .row.yellow .bar {
   background: #E8FF51;
 }
-.text-circle {
-  width: 600px;
-  height: 600px;
-  background: #fff;
-  border-radius: 50%;
-  margin: auto;
-  position: absolute;
-  z-index: 10;
-  border: solid 32px #414042;
-}
 .charity-outer, .heart-outer, .logo-outer {
   position: absolute;
 }
@@ -228,5 +289,72 @@ export default {
 .charity-inner img, .heart-inner img, .logo-inner img {
   max-width: 100%;
   max-height: 100%;
+}
+#container {
+  margin: 0%;
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  z-index: 99;
+}
+#circle {
+  color: #414042;
+  font-family: 'agencyfb';
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  padding-bottom: 100%;
+  position: relative;
+  width: 100%;
+  word-spacing: 0.2em;
+}
+#circle svg {
+  border: solid 32px #414042;
+  border-radius: 50%;
+  position: absolute;
+  left: 630px;
+  top: 205px;
+  width: 600px;
+  height: 600px;
+  -webkit-animation-name: rotate;
+     -moz-animation-name: rotate;
+      -ms-animation-name: rotate;
+       -o-animation-name: rotate;
+          animation-name: rotate;
+  -webkit-animation-duration: 30s;
+     -moz-animation-duration: 30s;
+      -ms-animation-duration: 30s;
+       -o-animation-duration: 30s;
+          animation-duration: 30s;
+  -webkit-animation-iteration-count: infinite;
+     -moz-animation-iteration-count: infinite;
+      -ms-animation-iteration-count: infinite;
+       -o-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+     -moz-animation-timing-function: linear;
+      -ms-animation-timing-function: linear;
+       -o-animation-timing-function: linear;
+          animation-timing-function: linear;
+}
+@-webkit-keyframes rotate {
+    from { -webkit-transform: rotate(360deg); }
+    to { -webkit-transform: rotate(0); }
+}
+@-moz-keyframes rotate {
+    from { -moz-transform: rotate(360deg); }
+    to { -moz-transform: rotate(0); }
+}
+@-ms-keyframes rotate {
+    from { -ms-transform: rotate(360deg); }
+    to { -ms-transform: rotate(0); }
+}
+@-o-keyframes rotate {
+    from { -o-transform: rotate(360deg); }
+    to { -o-transform: rotate(0); }
+}
+@keyframes rotate {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0); }
 }
 </style>
