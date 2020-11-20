@@ -4,6 +4,7 @@ const nodecg = require('./util/nodecg-api-context').get();
 const TEAM_ID = nodecg.bundleConfig.teamID;
 const EL_UPDATE_INTERVAL = nodecg.bundleConfig.elUpdateInterval;
 
+const settingsRep = nodecg.Replicant('settings').value;
 const totalRep = nodecg.Replicant('total');
 const fundGoalRep = nodecg.Replicant('fundraisingGoal');
 const donationRep = nodecg.Replicant(
