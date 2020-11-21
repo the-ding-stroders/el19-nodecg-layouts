@@ -27,6 +27,7 @@ function checkForDonations() {
 
     if (newDonationsCheck === true) {
       nodecg.log.debug('New donations found');
+      const settingsRep = nodecg.readReplicant('settings');
       // Get the new donations that aren't known by us yet
       const newDonations = elDonations.filter(({ donationID: id1 }) => !knownDonations.some(({ donationID: id2 }) => id2 === id1));
 
@@ -34,7 +35,6 @@ function checkForDonations() {
       donationRep.value = elDonations;
       extraLife.getTeam(TEAM_ID).then((teamInfoResults) => {
         // Update the team's total value and send out notifications
-        nodecg.log.debug('Updating total value replicant');
         totalRep.value = teamInfoResults.sumDonations;
         nodecg.sendMessage('donationAlert', newDonations);
         if (settingsRep.discordAlertsEnabled.value === true) {
