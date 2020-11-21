@@ -110,10 +110,10 @@ export default {
   background: #fff;
   border: solid 8px #414042;
   border-radius: 50%;
-  height: 115px;
-  line-height: 115px;
-  padding: 10px;
-  width: 115px;
+  height: 110px;
+  line-height: 110px;
+  padding: 15px;
+  width: 110px;
   margin: 0 auto;
 }
 .lower-third-grid .logo-outer::before {
