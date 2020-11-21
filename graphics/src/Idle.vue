@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <DonationTotal />
     <div id="container">
       <div id="circle">
         <svg
@@ -50,6 +51,9 @@
       </div>
     </div>
     <div class="charity-outer">
+      <p class="charity-label">
+        This Stream Benefits:
+      </p>
       <div class="charity-inner">
         <CharityLogos />
       </div>
@@ -139,12 +143,14 @@
 <script>
 import { gsap } from 'gsap';
 import CharityLogos from './components/CharityLogos.vue';
+import DonationTotal from './components/DonationTotal.vue';
 import TDSLogo from './components/TDSLogo.vue';
 
 export default {
   name: 'App',
   components: {
     CharityLogos,
+    DonationTotal,
     TDSLogo,
   },
   data: () => ({
@@ -248,6 +254,8 @@ export default {
 
 <style>
 #app {
+  font-family: 'agencyfb';
+  font-weight: bold;
   width: 1920px;
   height: 1080px;
   display: flex;
@@ -337,11 +345,16 @@ export default {
   position: absolute;
 }
 .charity-outer {
-  right: 0;
-  height: 136px;
-  width: 580px;
-  bottom: 133px;
-  margin-right: 40px;
+  left: 760px;
+  top: 456px;
+  width: 390px;
+  z-index: 12;
+}
+.charity-label {
+  color: #777777;
+  font-size: 2em;
+  margin: 0 0 4px 0;
+  text-align: center;
 }
 .heart-outer {
   right: 104px;
@@ -364,17 +377,26 @@ export default {
   max-width: 100%;
   max-height: 100%;
 }
+.total-amount {
+  bottom: 160px;
+  font-size: 4em;
+  position: absolute;
+  right: 200px;
+}
+.total-amount, .total-amount .odometer {
+  color: #ffffff;
+  font-family: 'agencyfb';
+  font-weight: bold;
+}
 #container {
   margin: 0%;
   width: 1920px;
   height: 1080px;
   position: absolute;
-  z-index: 99;
+  z-index: 11;
 }
 #circle {
   color: #414042;
-  font-family: 'agencyfb';
-  font-weight: bold;
   letter-spacing: 0.02em;
   overflow: hidden;
   padding-bottom: 100%;
