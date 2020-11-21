@@ -178,14 +178,46 @@ export default {
     });
 
     vm.rotateHeart();
+    vm.animateLines();
   },
   methods: {
+    animateLines() {
+      const vm = this;
+      vm.driveRowAcross('.row-1');
+      vm.driveRowAcross('.row-2', true);
+    },
+    driveRowAcross(element, reverse = false) {
+      let sourceOperator = '-';
+      let copyOperator = '+';
+      const linesContainer = document.querySelector('.lines-for-days');
+      const lineSource = document.querySelector(element);
+      const lineCopy = lineSource.cloneNode(true);
+      const timeline = gsap.timeline({ paused: true });
+
+      if (reverse) {
+        sourceOperator = '+';
+        copyOperator = '-';
+      }
+
+      linesContainer.appendChild(lineCopy);
+      lineSource.classList.add('driving');
+      lineCopy.classList.add('driving');
+
+      timeline.set(lineCopy, { x: `${copyOperator}=100%` });
+      timeline.to(element, {
+        duration: 60,
+        ease: 'none',
+        repeat: -1,
+        x: `${sourceOperator}=100%`,
+      });
+      timeline.play();
+    },
     rotateHeart() {
       const element = '.heart-inner img';
       const minRotate = 2;
       const maxRotate = 5;
-      const minTime = 10;
-      const maxTime = 20;
+      const minTime = 15;
+      const maxTime = 30;
       const randomTime = Math.floor(Math.random() * (maxTime - minTime + 1) + minTime);
       const rotations = Math.floor(Math.random() * (maxRotate - minRotate + 1) + minRotate);
       const timeline = gsap.timeline({ paused: true });
@@ -194,18 +226,18 @@ export default {
       timeline.set(element, { rotationY: 0 });
       timeline.to(element, {
         duration: 0.25,
-        y: 25,
+        y: 15,
       });
       timeline.to(element, {
-        duration: 0.25,
-        ease: 'back.out(4)',
+        duration: 1,
+        ease: 'elastic.out(1.5, 0.5)',
         y: 0,
       });
       timeline.to(element, {
         rotateY: 360 * rotations,
         duration: 2,
         ease: 'power4.easeInOut',
-      }, '-=0.25');
+      }, '-=0.95');
       timeline.play();
 
       setTimeout(vm.rotateHeart, randomTime * 1000);
@@ -229,7 +261,7 @@ export default {
 }
 .lines-for-days {
   display: grid;
-  grid-template-columns: 1920px;
+  grid-template-columns: 960px 960px;
   grid-template-rows: 36px 35px 36px 37px 134px 87px 36px 35px 134px 98px 36px 47px 134px 37px 36px;
   width: 100%;
   z-index: 1;
@@ -241,11 +273,14 @@ export default {
   margin-left: -18px;
 }
 .row-1 {
-  margin-left: -80px;
+  grid-row-start: 1;
+  height: 36px;
 }
 .row-2 {
   grid-row-start: 3;
+  height: 36px;
   padding-left: 215px;
+  top: 130px;
 }
 .row-3 { grid-row-start: 5; }
 .row-4 {
@@ -266,6 +301,7 @@ export default {
   margin-left: -80px;
 }
 .row-4, .row-5, .row-6 {
+  grid-column-start: 2;
   margin-left: 0px;
   text-align: right;
 }
@@ -293,6 +329,9 @@ export default {
 }
 .row.yellow .bar {
   background: #E8FF51;
+}
+.row.driving {
+  position: absolute;
 }
 .charity-outer, .heart-outer, .logo-outer {
   position: absolute;
