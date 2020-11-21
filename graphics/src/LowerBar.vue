@@ -18,31 +18,19 @@
         <LowerMessages />
       </div>
       <div class="total lt-container">
-        <div class="total-amount">
-          <span
-            class="dolla-dolla-signz"
-            style="color: #414042;"
-          >$</span><IOdometer
-            :value="donationAmount"
-            format="(,ddd).DD"
-          />
-          <span class="dolla-dolla-signz">/ {{ fundraisingGoal | toCurrency }}</span>
-        </div>
+        <DonationTotal show-goal />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars, import/extensions
-import Odometer from 'odometer/odometer.min.js';
-import IOdometer from 'vue-odometer';
 import CharityLogos from './components/CharityLogos.vue';
 import DonationsList from './components/DonationsList.vue';
 import DonationAlert from './components/DonationAlert.vue';
+import DonationTotal from './components/DonationTotal.vue';
 import LowerMessages from './components/LowerMessages.vue';
 import TDSLogo from './components/TDSLogo.vue';
-import 'odometer/themes/odometer-theme-default.css';
 
 export default {
   name: 'LowerBar',
@@ -50,33 +38,9 @@ export default {
     CharityLogos,
     DonationAlert,
     DonationsList,
-    IOdometer,
+    DonationTotal,
     LowerMessages,
     TDSLogo,
-  },
-  data: () => ({
-    donationAmount: 0,
-    fundraisingGoal: 0,
-  }),
-  mounted() {
-    const vm = this;
-    const fundGoalRep = nodecg.Replicant('fundraisingGoal');
-
-    fundGoalRep.on('change', () => {
-      nodecg.readReplicant('fundraisingGoal', (value) => {
-        vm.fundraisingGoal = value;
-      });
-    });
-
-    nodecg.readReplicant('total', (value) => {
-      vm.donationAmount = value;
-    });
-
-    nodecg.listenFor('donation', () => {
-      nodecg.readReplicant('total', (value) => {
-        vm.donationAmount = value;
-      });
-    });
   },
 };
 </script>
