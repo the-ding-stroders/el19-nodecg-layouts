@@ -1,9 +1,7 @@
 <template>
   <div class="donation-alert">
     <div class="new-donation-text">
-      <span>${{ currentDonation.amount }}</span>
-      <span>from</span>
-      <span>{{ currentDonation.displayName }}</span>
+      ${{ currentDonation.amount }} from {{ currentDonation.displayName }}
     </div>
     <div class="slash-bot-wrapper">
       <div class="slash-bot-animate">
@@ -189,8 +187,11 @@ export default {
   width: 100%;
   text-align: center;
   color: #000;
-  font-size: 26px;
+  font-size: 2.5em;
+  font-weight: bold;
+  letter-spacing: 0.05em;
   line-height: 76px;
   opacity: 0;
+  word-spacing: 0.05em;
 }
 </style>
