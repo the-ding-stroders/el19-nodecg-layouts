@@ -230,9 +230,8 @@ export default {
   position: relative;
   z-index: 3;
 }
-.lower-third-grid .total .total-amount .dolla-dolla-signz {
-  padding-bottom: 2px;
-  vertical-align: middle;
+.lower-third-grid .total .total-amount .dollar-sign {
+  color: #414042;
 }
 .lower-third-grid .total .odometer {
   color: #414042;

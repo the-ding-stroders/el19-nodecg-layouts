@@ -1,15 +1,14 @@
 <template>
   <div class="total-amount">
     <span
-      class="dolla-dolla-signz"
-      style="color: #414042;"
+      class="dollar-sign text-adjustment"
     >$</span><IOdometer
       :value="donationTotal"
       format="(,ddd).DD"
     />
     <span
       v-if="showGoal"
-      class="dolla-dolla-signz"
+      class="text-adjustment"
     >/ {{ fundraisingGoal | toCurrency }}</span>
   </div>
 </template>
@@ -58,5 +57,8 @@ export default {
 </script>
 
 <style>
-
+.text-adjustment {
+  padding-bottom: 2px;
+  vertical-align: middle;
+}
 </style>
