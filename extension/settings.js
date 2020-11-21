@@ -6,7 +6,7 @@ nodecg.Replicant('settings', 'tds-2020-layouts', {
     discordAlertsEnabled: {
       name: 'Discord Alerts Enabled',
       description: 'Whether Discord alerts should be active',
-      value: true,
+      value: false,
     },
     donationDisplayTime: {
       name: 'Donation Display (Milliseconds)',
