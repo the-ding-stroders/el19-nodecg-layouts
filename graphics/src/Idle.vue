@@ -137,6 +137,7 @@
         <div class="bar size-small" />
       </div>
     </div>
+    <DotFall />
   </div>
 </template>
 
@@ -144,6 +145,7 @@
 import { gsap } from 'gsap';
 import CharityLogos from './components/CharityLogos.vue';
 import DonationTotal from './components/DonationTotal.vue';
+import DotFall from './components/DotFall.vue';
 import TDSLogo from './components/TDSLogo.vue';
 
 export default {
@@ -151,6 +153,7 @@ export default {
   components: {
     CharityLogos,
     DonationTotal,
+    DotFall,
     TDSLogo,
   },
   data: () => ({
@@ -272,7 +275,6 @@ export default {
   grid-template-columns: 960px 960px;
   grid-template-rows: 36px 35px 36px 37px 134px 87px 36px 35px 134px 98px 36px 47px 134px 37px 36px;
   width: 100%;
-  z-index: 1;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -348,7 +350,7 @@ export default {
   left: 760px;
   top: 456px;
   width: 390px;
-  z-index: 12;
+  z-index: 6;
 }
 .charity-label {
   color: #777777;
@@ -393,7 +395,7 @@ export default {
   width: 1920px;
   height: 1080px;
   position: absolute;
-  z-index: 11;
+  z-index: 6;
 }
 #circle {
   color: #414042;

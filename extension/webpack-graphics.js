@@ -31,6 +31,10 @@ module.exports = [
             limit: 100000,
           },
         },
+        {
+          test: /\.png$/,
+          loader: 'file-loader',
+        },
       ],
     },
     output: {
@@ -65,6 +69,10 @@ module.exports = [
         {
           test: /\.vue$/,
           loader: 'vue-loader',
+        },
+        {
+          test: /\.png$/,
+          loader: 'file-loader',
         },
       ],
     },

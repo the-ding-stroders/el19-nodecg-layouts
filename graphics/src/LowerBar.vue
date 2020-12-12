@@ -21,6 +21,7 @@
         <DonationTotal show-goal />
       </div>
     </div>
+    <DotFall />
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import CharityLogos from './components/CharityLogos.vue';
 import DonationsList from './components/DonationsList.vue';
 import DonationAlert from './components/DonationAlert.vue';
 import DonationTotal from './components/DonationTotal.vue';
+import DotFall from './components/DotFall.vue';
 import LowerMessages from './components/LowerMessages.vue';
 import TDSLogo from './components/TDSLogo.vue';
 
@@ -39,6 +41,7 @@ export default {
     DonationAlert,
     DonationsList,
     DonationTotal,
+    DotFall,
     LowerMessages,
     TDSLogo,
   },
