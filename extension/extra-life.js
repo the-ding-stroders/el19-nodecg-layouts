@@ -39,6 +39,9 @@ function checkForDonations() {
         nodecg.sendMessage('donationAlert', newDonations);
         if (settingsRep.discordAlertsEnabled.value === true) {
           Object.values(newDonations).forEach((newDonation) => {
+            if (!newDonation.displayName) {
+              newDonation.displayName = 'Anonymous';
+            }
             nodecg.sendMessageToBundle('postDiscordMessage', 'nodecg-shout-dis', {
               title: 'New Extra Life Donation!',
               content: `$${newDonation.amount} from ${newDonation.displayName}!`,
